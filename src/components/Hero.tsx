@@ -75,9 +75,9 @@ export function Hero() {
               </motion.div>
 
               <motion.h1 className="hero__heading" variants={reveal}>
-                A Quiet Invitation to
+                Own Brilliance.
                 <br />
-                <em>Own Brilliance.</em>
+                Build With EMORI.
               </motion.h1>
 
               <motion.p className="hero__lede" variants={reveal}>
@@ -103,13 +103,13 @@ export function Hero() {
               <motion.div className="hero__actions" variants={reveal}>
                 <button
                   type="button"
-                  className="btn btn--gold-gradient"
+                  className="btn btn--gold-gradient btn--compact"
                   onClick={openApplication}
                 >
-                  Request Private Kit
+                  Private Kit
                 </button>
-                <a href="#opportunity" className="btn btn--ghost-light">
-                  Book Consultation
+                <a href="#opportunity" className="btn btn--ghost-light btn--compact">
+                  Consultation
                 </a>
               </motion.div>
             </motion.div>
