@@ -1,41 +1,39 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
-import { reveal, staggerSlow, luxuryEase } from '../lib/motion'
-import { HeroFloatingArt } from './hero/HeroFloatingArt'
+import banner from '../assets/Banner.png'
 import { useApplicationModal } from '../context/ApplicationModalContext'
+import { luxuryEase, reveal, staggerSlow } from '../lib/motion'
 
-const badges = [
-  'Company Operated',
-  '15% Guaranteed Returns',
-  'Shark Tank Backed',
-  'Premium Jewellery Brand',
+const highlights = [
+  { label: 'Investment', value: '₹2.25 Crores' },
+  { label: 'Franchise Fee', value: '₹10 Lakhs + GST' },
+  { label: 'Model', value: 'FICO' },
+  { label: 'Outlets', value: '3 Outlets' },
 ]
 
-const badgeReveal = {
+const cardReveal = {
   hidden: {
     opacity: 0,
-    y: 28,
-    scale: 0.96,
-    filter: 'blur(8px)',
+    y: 20,
+    filter: 'blur(6px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     filter: 'blur(0px)',
     transition: {
-      duration: 0.95,
+      duration: 0.8,
       ease: luxuryEase,
     },
   },
 }
 
-const badgeStagger = {
+const cardStagger = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.16,
-      delayChildren: 0.55,
+      staggerChildren: 0.08,
+      delayChildren: 0.4,
     },
   },
 }
@@ -48,40 +46,23 @@ export function Hero() {
     offset: ['start start', 'end start'],
   })
 
-  const heroFade = useTransform(scrollYProgress, [0, 0.65], [1, 0])
-  const bgY = useTransform(scrollYProgress, [0, 1], [0, 90])
-  const artY = useTransform(scrollYProgress, [0, 1], [0, 160])
-  const textScale = useTransform(scrollYProgress, [0, 0.7], [1, 0.94])
-  const textY = useTransform(scrollYProgress, [0, 1], [0, 70])
-  const buttonsY = useTransform(scrollYProgress, [0, 1], [0, -36])
-  const reflectionX = useTransform(scrollYProgress, [0, 1], ['0%', '8%'])
-  const reflectionXAlt = useTransform(scrollYProgress, [0, 1], ['0%', '-6%'])
+  const heroFade = useTransform(scrollYProgress, [0, 0.7], [1, 0])
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, 70])
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 48])
 
   return (
     <section id="top" ref={ref} className="hero">
       <motion.div className="hero__stage" style={{ opacity: heroFade }}>
-        {/* Cinematic luminous background */}
         <motion.div className="hero__atmosphere" style={{ y: bgY }} aria-hidden="true">
-          <div className="hero__lumen" />
-          <div className="hero__lumen hero__lumen--warm" />
-          <div className="hero__lumen hero__lumen--cool" />
-          <motion.div className="hero__reflection" style={{ x: reflectionX }} />
-          <motion.div
-            className="hero__reflection hero__reflection--secondary"
-            style={{ x: reflectionXAlt }}
+          <div
+            className="hero__banner"
+            style={{ backgroundImage: `url(${banner})` }}
           />
-          <div className="hero__blur-diamond hero__blur-diamond--1" />
-          <div className="hero__blur-diamond hero__blur-diamond--2" />
-          <div className="hero__blur-diamond hero__blur-diamond--3" />
-          <div className="hero__grain" />
           <div className="hero__veil" />
         </motion.div>
 
         <div className="hero__layout">
-          <motion.div
-            className="hero__copy"
-            style={{ y: textY, scale: textScale, transformOrigin: 'left center' }}
-          >
+          <motion.div className="hero__copy" style={{ y: textY }}>
             <motion.div
               variants={staggerSlow}
               initial="hidden"
@@ -90,78 +71,51 @@ export function Hero() {
             >
               <motion.div className="hero__badge" variants={reveal}>
                 <span className="hero__badge-mark" aria-hidden="true" />
-                Lab Grown Diamond Franchise
+                Lab Grown Diamond Jewellery
               </motion.div>
 
-              <motion.p className="hero__brand-whisper" variants={reveal}>
-                EMORI
-              </motion.p>
-
               <motion.h1 className="hero__heading" variants={reveal}>
-                Own India&apos;s Next Premium
+                A Quiet Invitation to
                 <br />
-                <em>Diamond Business.</em>
+                <em>Own Brilliance.</em>
               </motion.h1>
 
               <motion.p className="hero__lede" variants={reveal}>
-                A selectively awarded partnership into a company-operated luxury jewellery house —
-                engineered for enduring brilliance, protected territories, and investor-grade
-                returns.
+                Partner with EMORI — a Shark Tank–backed house of certified lab-grown diamonds.
+                Company-operated boutiques, protected territories, and enduring returns, composed
+                for discerning investors.
               </motion.p>
 
               <motion.ul
-                className="hero__proof"
-                variants={badgeStagger}
+                className="hero__metrics"
+                variants={cardStagger}
                 initial="hidden"
                 animate="visible"
               >
-                {badges.map((label) => (
-                  <motion.li key={label} className="hero__proof-item" variants={badgeReveal}>
-                    <span className="hero__proof-check" aria-hidden="true">
-                      <svg viewBox="0 0 16 16" fill="none">
-                        <path
-                          d="M3.5 8.2 L6.4 11.1 L12.5 4.8"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    {label}
+                {highlights.map((item) => (
+                  <motion.li key={item.label} className="hero__metric" variants={cardReveal}>
+                    <span className="hero__metric-label">{item.label}</span>
+                    <span className="hero__metric-value">{item.value}</span>
                   </motion.li>
                 ))}
               </motion.ul>
 
-              <motion.div variants={reveal}>
-                <motion.div className="hero__actions" style={{ y: buttonsY }}>
-                  <button
-                    type="button"
-                    className="btn btn--gold-gradient"
-                    onClick={openApplication}
-                  >
-                    Request Franchise Kit
-                  </button>
-                  <a href="#opportunity" className="btn btn--ghost-light">
-                    Book Consultation
-                  </a>
-                </motion.div>
+              <motion.div className="hero__actions" variants={reveal}>
+                <button
+                  type="button"
+                  className="btn btn--gold-gradient"
+                  onClick={openApplication}
+                >
+                  Request Private Kit
+                </button>
+                <a href="#opportunity" className="btn btn--ghost-light">
+                  Book Consultation
+                </a>
               </motion.div>
             </motion.div>
           </motion.div>
-
-          <div className="hero__art-slot">
-            <HeroFloatingArt parallaxY={artY} />
-          </div>
-        </div>
-
-        <div className="hero__scroll" aria-hidden="true">
-          <span>Discover</span>
-          <div className="hero__scroll-line" />
         </div>
       </motion.div>
-
-      <div className="hero__bridge" aria-hidden="true" />
     </section>
   )
 }

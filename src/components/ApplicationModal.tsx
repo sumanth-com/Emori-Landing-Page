@@ -11,12 +11,14 @@ import {
   useState,
   type FormEvent,
   type KeyboardEvent,
+  type WheelEvent as ReactWheelEvent,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { useApplicationModal } from '../context/ApplicationModalContext'
 import {
   filterCities,
   filterStates,
+  getCityNamesForState,
   INDIAN_STATES,
 } from '../data/indiaLocations'
 import { luxuryEase } from '../lib/motion'
@@ -176,6 +178,10 @@ export function ApplicationModal() {
               <motion.form
                 className="app-modal__form"
                 onSubmit={onSubmit}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
                 initial={reduced ? false : 'hidden'}
                 animate="visible"
                 variants={{
@@ -183,14 +189,24 @@ export function ApplicationModal() {
                   visible: { transition: { staggerChildren: 0.03 } },
                 }}
               >
+                {/* distract Chrome address autofill */}
+                <input
+                  type="text"
+                  name="fake-address"
+                  autoComplete="street-address"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  className="app-modal__autofill-trap"
+                />
+
                 <div className="app-modal__grid">
-                  <Field label="Full Name" name="name" required />
-                  <Field label="Phone Number" name="phone" type="tel" required />
-                  <Field label="Email Address" name="email" type="email" required />
+                  <Field label="Full Name" name="applicant_full_name" autoComplete="off" required />
+                  <Field label="Phone Number" name="applicant_phone" type="tel" autoComplete="off" required />
+                  <Field label="Email Address" name="applicant_email" type="email" autoComplete="off" required />
 
                   <SearchableField
                     label="State"
-                    name="state"
+                    name="applicant_state"
                     placeholder="Type or select state"
                     value={stateValue}
                     required
@@ -202,13 +218,13 @@ export function ApplicationModal() {
                   />
 
                   <SearchableField
-                    label="City"
-                    name="city"
+                    label="City / District"
+                    name="applicant_city"
                     placeholder={stateValue ? 'Type or select city' : 'Select state first'}
                     value={cityValue}
                     required
                     disabled={!stateValue}
-                    options={[]}
+                    options={stateValue ? getCityNamesForState(stateValue) : []}
                     filterOptions={(query) =>
                       stateValue ? filterCities(stateValue, query) : []
                     }
@@ -219,7 +235,7 @@ export function ApplicationModal() {
 
                   <MenuField
                     label="Investment Budget"
-                    name="budget"
+                    name="applicant_budget"
                     placeholder="Select range"
                     required
                     options={BUDGET_OPTIONS}
@@ -229,7 +245,7 @@ export function ApplicationModal() {
 
                   <MenuField
                     label="Preferred Location"
-                    name="location"
+                    name="applicant_location"
                     placeholder="Select preference"
                     required
                     options={LOCATION_OPTIONS}
@@ -237,7 +253,7 @@ export function ApplicationModal() {
                     onOpenChange={(open) => setOpenMenu(open ? 'location' : null)}
                   />
 
-                  <Field label="Occupation" name="occupation" required />
+                  <Field label="Occupation" name="applicant_occupation" autoComplete="off" required />
                 </div>
 
                 <div className="app-modal__footer">
@@ -270,18 +286,35 @@ function Field({
   name,
   type = 'text',
   required,
+  autoComplete = 'off',
 }: {
   label: string
   name: string
   type?: string
   required?: boolean
+  autoComplete?: string
 }) {
   return (
     <motion.label className="app-field" variants={fieldReveal}>
       <span>{label}</span>
-      <input name={name} type={type} required={required} placeholder=" " autoComplete="on" />
+      <input
+        name={name}
+        type={type}
+        required={required}
+        placeholder=" "
+        autoComplete={autoComplete}
+        autoCorrect="off"
+        spellCheck={false}
+        data-lpignore="true"
+        data-1p-ignore="true"
+        data-form-type="other"
+      />
     </motion.label>
   )
+}
+
+function stopMenuWheel(e: ReactWheelEvent) {
+  e.stopPropagation()
 }
 
 function SearchableField({
@@ -311,6 +344,7 @@ function SearchableField({
 }) {
   const listId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLUListElement>(null)
   const [query, setQuery] = useState(value)
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -326,6 +360,18 @@ function SearchableField({
     document.addEventListener('mousedown', onPointer)
     return () => document.removeEventListener('mousedown', onPointer)
   }, [open, onOpenChange])
+
+  useEffect(() => {
+    if (!open || !menuRef.current) return
+    const el = menuRef.current
+    const onWheel = (e: WheelEvent) => {
+      e.stopPropagation()
+      e.preventDefault()
+      el.scrollTop += e.deltaY
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [open])
 
   const suggestions = useMemo(() => {
     const filtered = filterOptions(query)
@@ -398,6 +444,11 @@ function SearchableField({
           disabled={disabled}
           placeholder={placeholder}
           autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          data-lpignore="true"
+          data-1p-ignore="true"
+          data-form-type="other"
           role="combobox"
           aria-expanded={open}
           aria-controls={listId}
@@ -424,7 +475,13 @@ function SearchableField({
           }}
         />
         {open && !disabled && (
-          <ul id={listId} className="app-menu" role="listbox">
+          <ul
+            id={listId}
+            ref={menuRef}
+            className="app-menu"
+            role="listbox"
+            onWheel={stopMenuWheel}
+          >
             {suggestions.length ? (
               suggestions.map((item, index) => (
                 <li key={item} role="option" aria-selected={item === value}>
@@ -470,6 +527,7 @@ function MenuField({
 }) {
   const listId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLUListElement>(null)
   const [value, setValue] = useState('')
 
   useEffect(() => {
@@ -481,8 +539,24 @@ function MenuField({
     return () => document.removeEventListener('mousedown', onPointer)
   }, [open, onOpenChange])
 
+  useEffect(() => {
+    if (!open || !menuRef.current) return
+    const el = menuRef.current
+    const onWheel = (e: WheelEvent) => {
+      e.stopPropagation()
+      el.scrollTop += e.deltaY
+      e.preventDefault()
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [open])
+
   return (
-    <motion.div className="app-field app-field--combo" variants={fieldReveal} ref={rootRef}>
+    <motion.div
+      className={`app-field app-field--combo${open ? ' is-open' : ''}`}
+      variants={fieldReveal}
+      ref={rootRef}
+    >
       <span>{label}</span>
       <div className={`app-combo${open ? ' is-open' : ''}`}>
         <input type="hidden" name={name} value={value} required={required} />
@@ -498,7 +572,13 @@ function MenuField({
         </button>
         <span className="app-combo__chevron" aria-hidden="true" />
         {open && (
-          <ul id={listId} className="app-menu" role="listbox">
+          <ul
+            id={listId}
+            ref={menuRef}
+            className="app-menu"
+            role="listbox"
+            onWheel={stopMenuWheel}
+          >
             {options.map((item) => (
               <li key={item} role="option" aria-selected={item === value}>
                 <button
