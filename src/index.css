@@ -7911,11 +7911,11 @@ html.modal-open .experience {
   flex: 0 0 auto;
   flex-wrap: nowrap;
   gap: 0.3rem;
-  padding: 0.45rem 0.75rem;
+  padding: 0.45rem 0.65rem;
   border-radius: 999px;
-  background: rgba(255, 252, 248, 0.98);
-  border: none;
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.1);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(255, 252, 248, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .store__filter-spec-kicker {
@@ -7992,9 +7992,16 @@ html.modal-open .experience {
   flex-wrap: nowrap;
   gap: 0.35rem;
   background: #111111;
-  border-color: #111111;
+  border-color: transparent;
   color: #ffffff;
   box-shadow: 0 6px 16px rgba(17, 17, 17, 0.12);
+}
+
+.store__filter.is-active,
+.store__filter.is-active .store__filter-part,
+.store__filter.is-active .store__filter-sep {
+  color: #ffffff !important;
+  -webkit-font-smoothing: antialiased;
 }
 
 .store__filter.is-combined {
@@ -8952,24 +8959,6 @@ html.modal-open .experience {
   background: var(--surface);
   border: 1px solid rgba(212, 175, 55, 0.14);
   box-shadow: 0 12px 36px rgba(17, 17, 17, 0.06);
-  transition:
-    border-color 0.45s var(--ease-luxury),
-    box-shadow 0.45s var(--ease-luxury),
-    transform 0.45s var(--ease-luxury),
-    background 0.45s var(--ease-luxury);
-}
-
-.invest__panel:hover {
-  border-color: rgba(212, 175, 55, 0.42);
-  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
-  box-shadow:
-    0 16px 34px rgba(212, 175, 55, 0.14),
-    0 8px 22px rgba(17, 17, 17, 0.05);
-  transform: translateY(-2px);
-}
-
-.invest__panel-title {
-  margin: 0 0 0.65rem;
 }
 
 .invest__panel-hero {
@@ -8979,18 +8968,18 @@ html.modal-open .experience {
 .invest__mg-box {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.55rem;
   margin-bottom: 0.75rem;
-  padding: 0.8rem 1rem;
+  padding: 0.55rem 0.85rem;
   border-radius: 999px;
-  border: none;
-  background: rgba(212, 175, 55, 0.16);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(255, 252, 248, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .invest__mg-box .invest__highlight-icon {
-  width: 2rem;
-  height: 2rem;
+  width: 1.65rem;
+  height: 1.65rem;
   flex-shrink: 0;
   color: #111111;
 }
@@ -9008,29 +8997,26 @@ html.modal-open .experience {
 .invest__mg-period {
   margin: 0;
   font-family: var(--font-brand);
-  font-size: clamp(0.62rem, 1vw, 0.72rem);
+  font-size: 0.48rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
-}
-
-.invest__mg-label {
-  color: #ffffff;
+  color: #111111;
 }
 
 .invest__mg-value {
   margin: 0;
   font-family: var(--font-brand);
-  font-size: clamp(2rem, 4.2vw, 2.65rem);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
   font-weight: 700;
-  color: #ffffff;
+  color: #000000;
   line-height: 1;
   white-space: nowrap;
 }
 
 .invest__mg-period {
-  color: #ffffff;
+  color: #111111;
 }
 
 .invest__returns-divider {
@@ -9068,15 +9054,6 @@ html.modal-open .experience {
   border-color: rgba(212, 175, 55, 0.2);
   color: #fff;
   box-shadow: 0 16px 40px rgba(17, 17, 17, 0.18);
-}
-
-.invest__panel--dark:hover {
-  border-color: rgba(212, 175, 55, 0.48);
-  background: linear-gradient(180deg, #171717 0%, #12110e 100%);
-  box-shadow:
-    0 18px 38px rgba(212, 175, 55, 0.14),
-    0 12px 28px rgba(0, 0, 0, 0.28);
-  transform: translateY(-2px);
 }
 
 .invest__panel-title {
@@ -11013,15 +10990,28 @@ html.modal-open .experience {
 
 .invest__panel--dark :where(p, li, span, label, small, td, th, h3),
 .invest__panel--dark .invest__panel-title,
-.invest__panel--dark .invest__mg-label,
-.invest__panel--dark .invest__mg-value,
-.invest__panel--dark .invest__mg-period,
 .invest__panel--dark .invest__returns-divider,
 .invest__panel--dark .invest__panel-note {
   color: #ffffff;
 }
 
-.invest__panel--dark .invest__highlight-icon {
-  color: #ffffff;
+.invest__panel--dark .invest__mg-box .invest__mg-label,
+.invest__panel--dark .invest__mg-box .invest__mg-period,
+.invest__panel--dark .invest__mg-box .invest__highlight-icon {
+  color: #111111 !important;
+}
+
+.invest__panel--dark .invest__mg-box .invest__mg-value {
+  color: #000000 !important;
+}
+
+.store__filter.is-active,
+.store__filter.is-active :where(span) {
+  color: #ffffff !important;
+}
+
+.store__filter-spec-kicker,
+.store__filter-spec-text {
+  color: #111111 !important;
 }
 
