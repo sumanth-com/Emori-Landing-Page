@@ -206,11 +206,13 @@ function doGet(e) {
     return jsonResponse(getEmailConfigReport())
   }
 
-  return jsonResponse({
-    success: true,
-    status: 'EMORI form endpoint ready',
-    email: getEmailConfigReport(),
-  })
+  // Visiting /exec in a browser should show this — if you see 404, redeploy the Web App.
+  return HtmlService.createHtmlOutput(
+    '<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;padding:24px;color:#111;">' +
+      '<h2 style="margin:0 0 8px;">EMORI form endpoint is live</h2>' +
+      '<p style="margin:0;color:#555;">You can submit franchise leads to this URL.</p>' +
+      '</body></html>',
+  )
 }
 
 function doPost(e) {
