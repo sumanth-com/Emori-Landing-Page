@@ -4,6 +4,7 @@ export const CONTACT_PHONE_TEL = '+919129130303'
 export const CONTACT_WHATSAPP = '919129130303'
 export const CONTACT_WEBSITE_DISPLAY = 'www.ifranchise.in'
 export const CONTACT_WEBSITE_URL = 'https://www.ifranchise.in'
+export const BOOK_A_CALL_URL = 'https://cal.com/ifranchise.in/emori'
 
 export const CONTACT_WHATSAPP_URL = `https://wa.me/${CONTACT_WHATSAPP}?text=${encodeURIComponent(
   'Hello EMORI, I would like to know more about the franchise opportunity.',

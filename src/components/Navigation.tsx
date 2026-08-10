@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState, type MouseEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CONTACT_PHONE_TEL } from '../data/contact'
+import { BOOK_A_CALL_URL } from '../data/contact'
 import { scrollToSection, sectionPath, updateSectionHash } from '../lib/scrollToSection'
 
 const links = [
@@ -91,7 +91,12 @@ export function Navigation({ variant = 'default' }: NavigationProps) {
           </a>
         ))}
       </nav>
-      <a href={`tel:${CONTACT_PHONE_TEL}`} className="nav__cta nav__cta--book">
+      <a
+        href={BOOK_A_CALL_URL}
+        className="nav__cta nav__cta--book"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Book a Call
       </a>
     </motion.header>
