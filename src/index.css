@@ -1292,7 +1292,7 @@ img {
 .trust-proven__tile {
   position: relative;
   margin: 0;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   border-radius: clamp(18px, 2.4vw, 24px);
   overflow: hidden;
   background: #e8dfd4;
@@ -1330,14 +1330,13 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: clamp(3.75rem, 26%, 4.75rem);
-  min-height: clamp(6rem, 44%, 7.5rem);
-  padding: 0.5rem 0.4rem 0.95rem;
+  width: clamp(3.2rem, 22%, 4.1rem);
+  padding: 0.34rem 0.32rem 0.46rem;
   background: #111111;
   color: #ffffff;
   text-align: center;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 88%, 0 100%);
-  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.28);
+  border-radius: 0 0 0 14px;
+  box-shadow: 0 6px 16px rgba(17, 17, 17, 0.24);
 }
 
 .trust-proven__badge-kicker {
@@ -1351,17 +1350,17 @@ img {
 }
 
 .trust-proven__badge-brand {
-  margin-top: 0.22rem;
+  margin-top: 0.16rem;
   font-family: var(--font-brand);
-  font-size: clamp(0.46rem, 2.6vw, 0.62rem);
+  font-size: clamp(0.44rem, 2.4vw, 0.58rem);
   font-weight: 700;
   letter-spacing: 0.02em;
-  line-height: 1.15;
+  line-height: 1.12;
   text-transform: uppercase;
 }
 
 .trust-proven__badge-season {
-  margin-top: 0.28rem;
+  margin-top: 0.18rem;
   font-family: var(--font-brand);
   font-size: clamp(0.32rem, 2vw, 0.42rem);
   font-weight: 500;
@@ -9594,15 +9593,16 @@ html.modal-open .experience {
 .hero__copy-inner {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
   max-width: none;
+  text-align: center;
 }
 
 .hero__copy-head {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.9rem;
   width: 100%;
 }
@@ -9620,23 +9620,25 @@ html.modal-open .experience {
 }
 
 .hero__heading {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  font-size: clamp(2rem, 4.2vw, 3.15rem);
+  font-family: var(--font-brand);
+  font-size: clamp(1.85rem, 3.6vw, 2.85rem);
   font-weight: 600;
-  line-height: 1.06;
+  line-height: 1.18;
   letter-spacing: -0.02em;
-  color: #000000;
+  color: #111111;
   text-wrap: balance;
+  text-align: center;
 }
 
 .hero__lede {
-  margin: 1rem 0 0;
+  margin: 1rem auto 0;
   width: 100%;
   max-width: 34rem;
   font-size: clamp(0.88rem, 1.2vw, 0.96rem);
   font-weight: 400;
   line-height: 1.72;
   color: rgba(17, 17, 17, 0.72);
+  text-align: center;
 }
 
 .hero__stats {
@@ -9673,9 +9675,9 @@ html.modal-open .experience {
 
 .hero__stat-value {
   font-family: var(--font-avenir);
-  font-size: clamp(0.92rem, 1.35vw, 1.08rem);
+  font-size: clamp(0.82rem, 1.2vw, 1rem);
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   color: #000000;
 }
@@ -10337,17 +10339,6 @@ html.modal-open .experience {
 .finale__contact-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 14px 28px rgba(17, 17, 17, 0.22);
-}
-
-.finale__contact-primary--outline {
-  background: #ffffff;
-  color: #111111;
-  border: 1px solid rgba(17, 17, 17, 0.14);
-  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.08);
-}
-
-.finale__contact-primary--outline:hover {
-  box-shadow: 0 12px 24px rgba(17, 17, 17, 0.12);
 }
 
 .finale__contact-icon {

@@ -16,6 +16,7 @@ import { CursorGlow } from './components/ui/CursorGlow'
 import { ApplicationModalProvider } from './context/ApplicationModalContext'
 import { useLenis } from './hooks/useLenis'
 import { WhatsAppButton } from './components/WhatsAppButton'
+import { SECTION_SLUGS } from './lib/scrollToSection'
 
 function Experience() {
   useLenis()
@@ -46,6 +47,9 @@ export default function App() {
         <ScrollManager />
         <Routes>
           <Route path="/" element={<Experience />} />
+          {SECTION_SLUGS.map((section) => (
+            <Route key={section} path={`/${section}`} element={<Experience />} />
+          ))}
           <Route path="/thank-you" element={<ThankYouPage />} />
         </Routes>
         <ApplicationModal />

@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Footer } from './Footer'
 import { luxuryEase, reveal } from '../lib/motion'
 import { ApplicationForm } from './ApplicationForm'
-import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL, CONTACT_WEBSITE_DISPLAY, CONTACT_WEBSITE_URL } from '../data/contact'
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL, CONTACT_WEBSITE_URL } from '../data/contact'
 
 const trustHighlights = [
   'Shark Tank Backed',
@@ -72,12 +72,13 @@ export function FinalCta() {
               </a>
               <a
                 href={CONTACT_WEBSITE_URL}
-                className="finale__contact-primary finale__contact-primary--outline"
+                className="finale__contact-icon"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Visit www.ifranchise.in"
+                title="www.ifranchise.in"
               >
                 <GlobeIcon />
-                {CONTACT_WEBSITE_DISPLAY}
               </a>
               <a
                 href={`tel:${CONTACT_PHONE_TEL}`}

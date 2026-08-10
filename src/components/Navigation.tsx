@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState, type MouseEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { BOOK_A_CALL_URL } from '../data/contact'
-import { scrollToSection, sectionPath, updateSectionHash } from '../lib/scrollToSection'
+import { scrollToSection, sectionPath } from '../lib/scrollToSection'
 
 const links = [
   { id: 'investment', label: 'Investment' },
@@ -41,7 +41,6 @@ export function Navigation({ variant = 'default' }: NavigationProps) {
 
     if (location.pathname === '/') {
       scrollToSection('top')
-      updateSectionHash('top')
       return
     }
 
@@ -50,14 +49,14 @@ export function Navigation({ variant = 'default' }: NavigationProps) {
 
   const goToSection = (event: MouseEvent<HTMLAnchorElement>, sectionId: string) => {
     event.preventDefault()
+    const path = sectionPath(sectionId)
 
-    if (location.pathname === '/') {
+    if (location.pathname === path) {
       scrollToSection(sectionId)
-      updateSectionHash(sectionId)
       return
     }
 
-    navigate({ pathname: '/', hash: sectionId })
+    navigate(path)
   }
 
   const navClassName = [
@@ -76,7 +75,7 @@ export function Navigation({ variant = 'default' }: NavigationProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
     >
-      <a href="/#top" className="nav__brand" aria-label="EMORI home" onClick={goHome}>
+      <a href="/" className="nav__brand" aria-label="EMORI home" onClick={goHome}>
         EMORI
       </a>
       <nav className="nav__links" aria-label="Primary">

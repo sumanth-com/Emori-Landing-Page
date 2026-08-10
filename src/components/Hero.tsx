@@ -1,18 +1,20 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import banner from '../assets/Banner.png'
 import { reveal, staggerSlow } from '../lib/motion'
-import { scrollToSection, updateSectionHash } from '../lib/scrollToSection'
+import { sectionPath } from '../lib/scrollToSection'
 
 const stats = [
   { label: 'Investment', value: '₹2.25 Cr', detail: 'Total Investment' },
-  { label: 'Minimum Guarantee*', value: '15% p.a.', detail: 'On Eligible Investment' },
+  { label: 'Minimum Guarantee*', value: '15% Per Annum', detail: 'On Eligible Investment' },
   { label: 'Franchise Fee', value: '₹10L + GST', detail: 'One Time' },
   { label: 'Outlets', value: '3 Stores', detail: 'Across NCR' },
 ]
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null)
+  const navigate = useNavigate()
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end start'],
@@ -45,16 +47,14 @@ export function Hero() {
                 </div>
 
                 <h1 className="hero__heading">
-                  Own Brilliance.
-                  <br />
-                  Build With EMORI.
+                  EMORI Lab-Grown Diamond Franchise in India
                 </h1>
               </motion.div>
 
               <motion.p className="hero__lede" variants={reveal}>
-                Partner with EMORI — a Shark Tank-backed house of certified lab-grown diamonds.
-                Company-operated boutiques, protected territories, and enduring returns, composed
-                for discerning investors.
+                Partner with India&apos;s Shark Tank-backed lab-grown diamond brand. Company-operated
+                boutiques, protected territories, and 15% guaranteed returns per annum — a premium
+                franchise opportunity for discerning investors.
               </motion.p>
 
               <motion.ul className="hero__stats" variants={reveal}>
@@ -71,20 +71,14 @@ export function Hero() {
                 <button
                   type="button"
                   className="btn btn--gold-gradient btn--compact"
-                  onClick={() => {
-                    scrollToSection('investment')
-                    updateSectionHash('investment')
-                  }}
+                  onClick={() => navigate(sectionPath('investment'))}
                 >
                   Explore Franchise Opportunity
                 </button>
                 <button
                   type="button"
                   className="btn btn--ghost-light btn--compact"
-                  onClick={() => {
-                    scrollToSection('invitation')
-                    updateSectionHash('invitation')
-                  }}
+                  onClick={() => navigate(sectionPath('invitation'))}
                 >
                   Talk to Our Team
                 </button>
@@ -93,7 +87,15 @@ export function Hero() {
           </motion.div>
         </div>
 
-        <a href="#trust-proven" className="hero__scroll-hint" aria-label="Scroll to explore">
+        <a
+          href={sectionPath('trust-proven')}
+          className="hero__scroll-hint"
+          aria-label="Scroll to explore"
+          onClick={(event) => {
+            event.preventDefault()
+            navigate(sectionPath('trust-proven'))
+          }}
+        >
           <span className="hero__scroll-mouse" aria-hidden="true">
             <span className="hero__scroll-wheel" />
           </span>
