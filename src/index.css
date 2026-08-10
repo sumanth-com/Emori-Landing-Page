@@ -9691,36 +9691,86 @@ html.modal-open .experience {
 
 .hero__actions {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: stretch;
-  gap: 0.7rem;
+  justify-content: center;
+  gap: 0.75rem;
   width: 100%;
-  margin-top: 1.25rem;
+  max-width: 36rem;
+  margin: 1.35rem auto 0;
 }
 
 .hero__actions .btn {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 2.75rem;
-  padding: 0.65rem 1.1rem;
+  flex: 1 1 12rem;
+  min-width: min(100%, 12rem);
+  min-height: 3rem;
+  padding: 0.78rem 1.35rem;
   border-radius: 999px;
-  font-size: 0.56rem;
-  letter-spacing: 0.12em;
+  font-family: var(--font-brand);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   line-height: 1.35;
   text-align: center;
-  white-space: nowrap;
+  text-decoration: none;
+  white-space: normal;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    transform 0.35s var(--ease-luxury),
+    box-shadow 0.35s var(--ease-luxury),
+    background 0.35s var(--ease-luxury),
+    border-color 0.35s var(--ease-luxury),
+    color 0.35s var(--ease-luxury),
+    filter 0.35s var(--ease-luxury);
 }
 
 .hero__actions .btn--gold-gradient {
-  flex: 1.2 1 0;
-  box-shadow: 0 10px 24px rgba(212, 175, 55, 0.22);
+  color: #1a1410;
+  background: linear-gradient(135deg, #ecd98f 0%, #d4af37 48%, #b8922a 100%);
+  border: 1px solid rgba(184, 146, 42, 0.35);
+  box-shadow:
+    0 10px 26px rgba(184, 146, 42, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.hero__actions .btn--gold-gradient:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+  box-shadow:
+    0 16px 34px rgba(184, 146, 42, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.hero__actions .btn--gold-gradient:active {
+  transform: translateY(0);
+  box-shadow:
+    0 8px 20px rgba(184, 146, 42, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
 }
 
 .hero__actions .btn--ghost-light {
-  flex: 0.85 1 0;
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(17, 17, 17, 0.16);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(17, 17, 17, 0.12);
   color: #111111;
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
+}
+
+.hero__actions .btn--ghost-light:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.45);
+  color: #6f5c18;
+  background: #ffffff;
+  box-shadow: 0 14px 28px rgba(17, 17, 17, 0.1);
+}
+
+.hero__actions .btn--ghost-light:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(17, 17, 17, 0.07);
+}
+
+.hero__actions .btn:focus-visible {
+  outline: 2px solid rgba(212, 175, 55, 0.65);
+  outline-offset: 3px;
 }
 
 .hero__highlight {
@@ -9827,13 +9877,10 @@ html.modal-open .experience {
 
   .hero__actions {
     flex-direction: column;
-    flex-wrap: wrap;
   }
 
   .hero__actions .btn {
-    flex: none;
     width: 100%;
-    white-space: normal;
   }
 }
 

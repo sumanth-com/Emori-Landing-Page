@@ -70,14 +70,14 @@ export function Hero() {
               <motion.div className="hero__actions" variants={reveal}>
                 <button
                   type="button"
-                  className="btn btn--gold-gradient btn--compact"
+                  className="btn btn--gold-gradient"
                   onClick={() => navigate(sectionPath('investment'))}
                 >
                   Explore Franchise Opportunity
                 </button>
                 <button
                   type="button"
-                  className="btn btn--ghost-light btn--compact"
+                  className="btn btn--ghost-light"
                   onClick={() => navigate(sectionPath('invitation'))}
                 >
                   Talk to Our Team
@@ -86,21 +86,6 @@ export function Hero() {
             </motion.div>
           </motion.div>
         </div>
-
-        <a
-          href={sectionPath('trust-proven')}
-          className="hero__scroll-hint"
-          aria-label="Scroll to explore"
-          onClick={(event) => {
-            event.preventDefault()
-            navigate(sectionPath('trust-proven'))
-          }}
-        >
-          <span className="hero__scroll-mouse" aria-hidden="true">
-            <span className="hero__scroll-wheel" />
-          </span>
-          <span className="hero__scroll-label">Scroll to Explore</span>
-        </a>
       </motion.div>
     </section>
   )
