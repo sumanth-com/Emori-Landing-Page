@@ -40,6 +40,13 @@ export function FinalCta() {
 
   return (
     <section id="contact" className="finale finale--screen">
+      <div className="finale__atmosphere" aria-hidden="true">
+        <div className="finale__glow finale__glow--core" />
+        <div className="finale__glow finale__glow--left" />
+        <div className="finale__glow finale__glow--right" />
+        <div className="finale__glow finale__glow--bottom" />
+      </div>
+
       <div className="finale__scene finale__scene--conversion">
         <div className="finale__layout">
           <motion.div

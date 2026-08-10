@@ -83,7 +83,7 @@ export function PhoneField({
           <input
             type="hidden"
             name="applicant_phone"
-            value={phone ? `+${country.dialCode}${sanitizePhoneDigits(phone)}` : ''}
+            value={sanitizePhoneDigits(phone)}
           />
 
           <div className={`phone-field__code app-combo${open ? ' is-open' : ''}`}>

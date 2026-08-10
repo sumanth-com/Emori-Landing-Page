@@ -178,7 +178,7 @@ function testLeadEmail() {
     fullName: 'Test Lead',
     countryIso: 'IN',
     countryCode: '91',
-    phone: '+919129130303',
+    phone: '9129130303',
     email: 'test@example.com',
     state: 'Delhi',
     city: 'New Delhi',
@@ -232,8 +232,13 @@ function doPost(e) {
       data.city,
       data.budget,
       data.location,
-      emailResult.ok ? 'Sent' : emailResult.message,
+      emailResult.ok ? 'Sent' : emailResult.skipped ? '' : emailResult.message,
     ])
+
+    var redirectUrl = getSafeRedirectUrl(e)
+    if (redirectUrl) {
+      return redirectHtml(redirectUrl)
+    }
 
     return jsonResponse({
       success: true,
@@ -245,13 +250,37 @@ function doPost(e) {
   }
 }
 
+function getSafeRedirectUrl(e) {
+  var params = (e && e.parameter) || {}
+  var redirectUrl = String(params.redirect_url || '').trim()
+  if (!redirectUrl) return ''
+  if (redirectUrl.indexOf('/thank-you') === -1) return ''
+  if (!/^https?:\/\//i.test(redirectUrl)) return ''
+  return redirectUrl
+}
+
+function redirectHtml(url) {
+  var safeUrl = String(url).replace(/"/g, '')
+  return HtmlService.createHtmlOutput(
+    '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+      '<meta http-equiv="refresh" content="0;url=' +
+      escapeHtml(safeUrl) +
+      '">' +
+      '<script>window.top.location.replace(' +
+      JSON.stringify(safeUrl) +
+      ');</script>' +
+      '</head><body style="font-family:Arial,sans-serif;padding:24px;color:#111;">Redirecting…</body></html>',
+  ).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+}
+
 function sendLeadNotificationEmail(data) {
   var settings = getEmailSettings()
 
   if (!settings.apiKey) {
     return {
       ok: false,
-      message: 'Not configured — add RESEND_API_KEY to Config sheet',
+      message: '',
+      skipped: true,
     }
   }
 

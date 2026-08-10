@@ -1159,16 +1159,24 @@ body.nav-menu-open .whatsapp-fab {
 
 @media (max-width: 979px) {
   .hero {
-    height: auto;
-    max-height: none;
-    min-height: 100svh;
-    overflow: visible;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+    overflow: hidden;
+    background: #c9b49a !important;
   }
 
   .hero__stage {
-    height: auto;
-    min-height: 100svh;
-    overflow: visible;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  .hero__atmosphere {
+    inset: -1px 0 -2px;
+    transform: none !important;
   }
 
   .hero__banner--desktop {
@@ -1177,9 +1185,10 @@ body.nav-menu-open .whatsapp-fab {
 
   .hero__banner--mobile {
     display: block;
-    background-position: center 28%;
+    background-position: center bottom;
     background-size: cover;
-    transform: none;
+    background-color: #c9b49a;
+    transform: none !important;
   }
 
   .hero__veil {
@@ -1225,15 +1234,17 @@ body.nav-menu-open .whatsapp-fab {
 
 @media (max-width: 767px) {
   .hero {
-    height: 100svh;
-    max-height: 100svh;
-    min-height: 100svh;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
     overflow: hidden;
+    background: #c9b49a !important;
   }
 
   .hero__stage {
     height: 100%;
-    min-height: 0;
+    min-height: 100%;
     max-height: 100%;
     overflow: hidden;
     display: flex;
@@ -1242,22 +1253,24 @@ body.nav-menu-open .whatsapp-fab {
 
   .hero__atmosphere {
     position: absolute;
-    inset: 0;
+    inset: -1px 0 -3px;
+    transform: none !important;
   }
 
   .hero__banner--mobile {
-    background-position: center 22%;
+    background-position: center bottom;
     background-size: cover;
-    transform: none;
+    background-color: #c9b49a;
+    transform: none !important;
   }
 
   .hero__veil {
     background: linear-gradient(
       180deg,
-      rgba(248, 245, 240, 0.2) 0%,
-      transparent 20%,
-      transparent 75%,
-      rgba(248, 245, 240, 0.1) 100%
+      rgba(201, 180, 154, 0.18) 0%,
+      transparent 22%,
+      transparent 78%,
+      rgba(201, 180, 154, 0.08) 100%
     );
     pointer-events: none;
   }
@@ -5953,11 +5966,7 @@ body.nav-menu-open .whatsapp-fab {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(ellipse 70% 55% at 50% 18%, rgba(212, 175, 55, 0.14), transparent 58%),
-    radial-gradient(ellipse 50% 40% at 20% 70%, rgba(255, 255, 255, 0.04), transparent 60%),
-    radial-gradient(ellipse 45% 35% at 82% 55%, rgba(212, 175, 55, 0.08), transparent 55%),
-    #111111;
+  background: transparent;
 }
 
 .finale__beam {
@@ -6566,16 +6575,16 @@ body.nav-menu-open .whatsapp-fab {
 }
 
 .finale--screen .footer--finale {
-  background: var(--page-bg) !important;
+  background: transparent !important;
   backdrop-filter: none;
-  border-top: 1px solid rgba(17, 17, 17, 0.08);
+  border-top: 1px solid rgba(17, 17, 17, 0.1);
   color: #111111;
 }
 
 .finale--screen .footer--finale .footer__copyright,
 .finale--screen .footer--finale .footer__meta,
 .finale--screen .footer--finale .footer__meta a {
-  color: #111111 !important;
+  color: rgba(17, 17, 17, 0.78) !important;
 }
 
 .finale--screen .footer--finale .footer__dot {
@@ -9466,7 +9475,209 @@ html.modal-open .experience {
   padding: clamp(4.75rem, 7vh, 5.25rem) 0 0 !important;
   overflow: visible !important;
   box-sizing: border-box;
-  background: var(--page-bg) !important;
+  color: #111111 !important;
+  background:
+    radial-gradient(ellipse 58% 48% at 78% 8%, rgba(255, 248, 235, 0.95) 0%, transparent 58%),
+    radial-gradient(ellipse 46% 40% at 18% 22%, rgba(240, 220, 180, 0.42) 0%, transparent 62%),
+    radial-gradient(ellipse 70% 55% at 50% 100%, rgba(232, 210, 170, 0.28) 0%, transparent 60%),
+    linear-gradient(165deg, #f8f3ec 0%, #f3ebe1 42%, #efe4d6 100%) !important;
+}
+
+.finale.finale--screen {
+  background:
+    radial-gradient(ellipse 58% 48% at 78% 8%, rgba(255, 248, 235, 0.95) 0%, transparent 58%),
+    radial-gradient(ellipse 46% 40% at 18% 22%, rgba(240, 220, 180, 0.42) 0%, transparent 62%),
+    radial-gradient(ellipse 70% 55% at 50% 100%, rgba(232, 210, 170, 0.28) 0%, transparent 60%),
+    linear-gradient(165deg, #f8f3ec 0%, #f3ebe1 42%, #efe4d6 100%) !important;
+  color: #111111 !important;
+}
+
+.finale__atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent !important;
+}
+
+.finale__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  will-change: transform, opacity;
+}
+
+.finale__glow--core {
+  width: min(58vw, 36rem);
+  height: min(58vw, 36rem);
+  top: -12%;
+  right: 4%;
+  background: radial-gradient(circle, rgba(255, 252, 245, 0.95) 0%, rgba(245, 226, 185, 0.45) 38%, transparent 72%);
+  animation: finale-light-pulse 9s ease-in-out infinite;
+}
+
+.finale__glow--left {
+  width: min(40vw, 26rem);
+  height: min(40vw, 26rem);
+  top: 18%;
+  left: -10%;
+  background: radial-gradient(circle, rgba(255, 244, 214, 0.7) 0%, rgba(232, 205, 150, 0.22) 48%, transparent 74%);
+  animation: finale-light-drift 16s ease-in-out infinite alternate;
+}
+
+.finale__glow--right {
+  width: min(34vw, 22rem);
+  height: min(34vw, 22rem);
+  top: 42%;
+  right: -8%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, rgba(240, 220, 175, 0.28) 45%, transparent 72%);
+  animation: finale-light-drift 18s ease-in-out infinite alternate-reverse;
+}
+
+.finale__glow--bottom {
+  width: min(50vw, 30rem);
+  height: min(50vw, 30rem);
+  bottom: -16%;
+  left: 28%;
+  background: radial-gradient(circle, rgba(245, 230, 195, 0.5) 0%, rgba(232, 205, 150, 0.16) 50%, transparent 74%);
+  animation: finale-light-pulse 12s ease-in-out infinite;
+}
+
+.finale__ray {
+  position: absolute;
+  top: -8%;
+  right: 6%;
+  width: min(48vw, 28rem);
+  height: min(70vh, 42rem);
+  background: linear-gradient(
+    168deg,
+    rgba(255, 252, 245, 0.55) 0%,
+    rgba(245, 226, 185, 0.18) 34%,
+    transparent 72%
+  );
+  filter: blur(18px);
+  transform-origin: 80% 0%;
+  opacity: 0.85;
+  animation: finale-ray-sweep 14s ease-in-out infinite alternate;
+}
+
+.finale__ray--b {
+  right: 18%;
+  width: min(36vw, 20rem);
+  opacity: 0.55;
+  animation-duration: 18s;
+  animation-direction: alternate-reverse;
+}
+
+.finale__glint-field,
+.finale__glint,
+.finale__ray {
+  display: none !important;
+}
+
+.finale__glint {
+  position: absolute;
+  display: block;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0;
+  will-change: opacity, transform, filter;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.55));
+  animation: finale-glint-twinkle 5.2s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.finale__glint--lg {
+  width: clamp(3.2rem, 7vw, 5.5rem);
+  height: clamp(3.2rem, 7vw, 5.5rem);
+}
+
+.finale__glint--md {
+  width: clamp(2.1rem, 4.5vw, 3.4rem);
+  height: clamp(2.1rem, 4.5vw, 3.4rem);
+}
+
+.finale__glint--sm {
+  width: clamp(1.15rem, 2.6vw, 1.85rem);
+  height: clamp(1.15rem, 2.6vw, 1.85rem);
+}
+
+.finale__glint--1 { top: 12%; left: 8%; animation-delay: 0.2s; }
+.finale__glint--2 { top: 18%; left: 42%; animation-delay: 1.1s; animation-duration: 6.1s; }
+.finale__glint--3 { top: 10%; left: 72%; animation-delay: 2.4s; animation-duration: 4.6s; }
+.finale__glint--4 { top: 28%; right: 6%; animation-delay: 0.8s; }
+.finale__glint--5 { top: 36%; left: 18%; animation-delay: 3.2s; animation-duration: 5.8s; }
+.finale__glint--6 { top: 44%; left: 58%; animation-delay: 1.7s; animation-duration: 4.9s; }
+.finale__glint--7 { top: 52%; left: 4%; animation-delay: 2.9s; }
+.finale__glint--8 { top: 58%; right: 14%; animation-delay: 0.5s; animation-duration: 6.4s; }
+.finale__glint--9 { top: 68%; left: 28%; animation-delay: 3.8s; }
+.finale__glint--10 { top: 74%; left: 68%; animation-delay: 1.4s; animation-duration: 5.1s; }
+.finale__glint--11 { top: 82%; left: 12%; animation-delay: 2.1s; }
+.finale__glint--12 { top: 22%; left: 88%; animation-delay: 4.2s; animation-duration: 4.4s; }
+.finale__glint--13 { top: 48%; left: 38%; animation-delay: 0.9s; animation-duration: 7s; }
+.finale__glint--14 { bottom: 12%; right: 8%; animation-delay: 2.6s; }
+
+@keyframes finale-glint-twinkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.35) rotate(0deg);
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
+  }
+  18% {
+    opacity: 0.15;
+    transform: scale(0.55) rotate(4deg);
+  }
+  42% {
+    opacity: 0.95;
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.85));
+  }
+  58% {
+    opacity: 0.55;
+    transform: scale(0.82) rotate(-3deg);
+  }
+  78% {
+    opacity: 0.12;
+    transform: scale(0.45) rotate(2deg);
+  }
+}
+
+@media (max-width: 979px) {
+  .finale__glint--lg {
+    width: clamp(2.6rem, 14vw, 4.2rem);
+    height: clamp(2.6rem, 14vw, 4.2rem);
+  }
+
+  .finale__glint--md {
+    width: clamp(1.7rem, 9vw, 2.8rem);
+    height: clamp(1.7rem, 9vw, 2.8rem);
+  }
+
+  .finale__glint--sm {
+    width: clamp(1rem, 6vw, 1.5rem);
+    height: clamp(1rem, 6vw, 1.5rem);
+  }
+
+  .finale__glint--4,
+  .finale__glint--8,
+  .finale__glint--13 {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finale__glow,
+  .finale__ray,
+  .finale__glint {
+    animation: none !important;
+  }
+
+  .finale__glint {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
 }
 
 .finale__bg {
@@ -9481,6 +9692,16 @@ html.modal-open .experience {
 .finale--screen .footer--finale {
   position: relative;
   z-index: 1;
+}
+
+.finale--screen .finale__form-card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  box-shadow:
+    0 24px 56px rgba(17, 17, 17, 0.1),
+    0 8px 20px rgba(17, 17, 17, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset;
 }
 
 .finale--screen .finale__scene--conversion {
@@ -9509,13 +9730,13 @@ html.modal-open .experience {
 
 .finale--screen .finale__lede {
   font-size: clamp(0.92rem, 1.35vw, 1.02rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.55;
-  color: #111111 !important;
+  color: rgba(17, 17, 17, 0.82) !important;
 }
 
 .finale--screen .finale__copy .section-eyebrow {
-  color: #111111 !important;
+  color: rgba(17, 17, 17, 0.72) !important;
   font-weight: 700 !important;
 }
 
@@ -9629,7 +9850,7 @@ html.modal-open .experience {
 }
 
 .finale__lede {
-  color: #111111 !important;
+  color: rgba(17, 17, 17, 0.82) !important;
   font-weight: 700;
   max-width: 32rem;
   margin-inline: 0;
@@ -9752,9 +9973,8 @@ html.modal-open .experience {
   font-family: var(--font-brand);
 }
 
-/* ——— Unified light cream canvas across all sections ——— */
+/* ——— Unified light cream canvas across content sections ——— */
 
-.hero,
 .trust-proven,
 .why-emori,
 .fico,
@@ -9763,8 +9983,6 @@ html.modal-open .experience {
 .launch,
 .store,
 .faq,
-.finale,
-.footer,
 .chapter,
 .chapter--warm,
 .chapter--ivory {
@@ -9775,15 +9993,23 @@ html.modal-open .experience {
 .invest,
 .store,
 .faq,
-.finale,
 .performance,
 .journey,
 .market {
   background-image: none !important;
 }
 
+.finale.finale--screen {
+  background:
+    radial-gradient(ellipse 58% 48% at 78% 8%, rgba(255, 248, 235, 0.95) 0%, transparent 58%),
+    radial-gradient(ellipse 46% 40% at 18% 22%, rgba(240, 220, 180, 0.42) 0%, transparent 62%),
+    radial-gradient(ellipse 70% 55% at 50% 100%, rgba(232, 210, 170, 0.28) 0%, transparent 60%),
+    linear-gradient(165deg, #f8f3ec 0%, #f3ebe1 42%, #efe4d6 100%) !important;
+  color: #111111 !important;
+}
+
 .finale__atmosphere {
-  display: none !important;
+  display: block !important;
 }
 
 .hero__highlight,
@@ -11425,7 +11651,7 @@ html.modal-open .experience {
 
 .finale__copy .section-eyebrow {
   margin-bottom: 0.65rem;
-  color: #111111 !important;
+  color: rgba(17, 17, 17, 0.72) !important;
   font-weight: 700 !important;
 }
 
@@ -11460,7 +11686,7 @@ html.modal-open .experience {
   font-size: clamp(0.88rem, 1.3vw, 0.98rem);
   font-weight: 700;
   line-height: 1.65;
-  color: #111111 !important;
+  color: rgba(17, 17, 17, 0.82) !important;
 }
 
 .finale__trust {
@@ -11475,7 +11701,7 @@ html.modal-open .experience {
 .finale__trust li {
   padding: 0.38rem 0.75rem;
   border-radius: 999px;
-  border: 1px solid rgba(212, 175, 55, 0.28);
+  border: 1px solid rgba(184, 146, 42, 0.28);
   background: rgba(255, 255, 255, 0.78);
   font-family: var(--font-brand);
   font-size: 0.7rem;
@@ -11508,7 +11734,7 @@ html.modal-open .experience {
   text-decoration: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.18);
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.16);
   transition:
     transform 0.35s var(--ease-luxury),
     box-shadow 0.35s var(--ease-luxury);
@@ -11533,6 +11759,7 @@ html.modal-open .experience {
   height: 2.45rem;
   border-radius: 50%;
   background: #111111;
+  border: 1px solid #111111;
   color: #ffffff;
   text-decoration: none;
   transition: none;
@@ -12137,6 +12364,96 @@ html.modal-open .experience {
   color: #111111;
 }
 
+/* Contact left copy + footer on champagne starlight — dark clean text */
+.finale.finale--screen .finale__copy,
+.finale.finale--screen .finale__copy :where(
+  p,
+  li,
+  span,
+  h2,
+  .section-eyebrow,
+  .finale__heading,
+  .finale__lede
+) {
+  color: #111111 !important;
+}
+
+.finale.finale--screen .finale__lede {
+  color: rgba(17, 17, 17, 0.82) !important;
+  font-weight: 600 !important;
+}
+
+.finale.finale--screen .finale__heading {
+  color: #111111 !important;
+  font-weight: 700 !important;
+}
+
+.finale.finale--screen .section-eyebrow,
+.finale.finale--screen .finale__copy .section-eyebrow {
+  color: rgba(17, 17, 17, 0.72) !important;
+}
+
+.finale.finale--screen .finale__trust li {
+  border-color: rgba(184, 146, 42, 0.28) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: #111111 !important;
+}
+
+.finale.finale--screen .finale__rule {
+  background: #111111 !important;
+}
+
+.finale.finale--screen .finale__contact-primary {
+  color: #ffffff !important;
+  background: #111111 !important;
+}
+
+.finale.finale--screen .finale__contact-icon {
+  color: #ffffff !important;
+  background: #111111 !important;
+  border-color: #111111 !important;
+}
+
+.finale.finale--screen .footer--finale,
+.finale.finale--screen .footer--finale :where(p, a, span) {
+  color: rgba(17, 17, 17, 0.82) !important;
+}
+
+.finale.finale--screen .footer--finale {
+  background: transparent !important;
+  border-top-color: rgba(17, 17, 17, 0.1) !important;
+}
+
+.finale.finale--screen .footer--finale .footer__brand-logo {
+  filter: none;
+}
+
+.finale.finale--screen .footer--finale .footer__dot {
+  background: rgba(17, 17, 17, 0.28) !important;
+}
+
+/* Keep form card readable on the white card */
+.finale.finale--screen .finale__form-card,
+.finale.finale--screen .finale__form-card :where(
+  p,
+  li,
+  span,
+  label,
+  h2,
+  h3,
+  input,
+  button,
+  .app-field__label,
+  .app-form__title,
+  .app-form__consent
+) {
+  color: #111111 !important;
+}
+
+.finale.finale--screen .finale__form-card .app-form__submit {
+  color: #ffffff !important;
+}
+
 .journey,
 .journey :where(p, span, li, h2, em, .journey__label, .journey__heading, .journey__year, .journey__title) {
   color: #ffffff;
@@ -12579,27 +12896,14 @@ html.modal-open .experience {
   .store,
   .faq,
   .why-emori,
-  .trust-proven,
-  .finale {
+  .trust-proven {
     padding-top: clamp(2.25rem, 6vw, 3rem) !important;
     padding-bottom: clamp(2.25rem, 6vw, 3rem) !important;
   }
 
-  .hero__layout {
-    width: min(1180px, calc(100% - 1.25rem));
-    padding-top: clamp(4.75rem, 11vh, 5.75rem);
-    padding-bottom: 2rem;
-  }
-
-  .hero__lede {
-    font-size: 0.92rem;
-    line-height: 1.65;
-  }
-
-  .hero__statement {
-    font-size: 0.52rem;
-    letter-spacing: 0.16em;
-    padding: 0.65rem 0.85rem;
+  .finale.finale--screen {
+    padding-top: clamp(4.5rem, 8vh, 5.25rem) !important;
+    padding-bottom: 0 !important;
   }
 
   .performance__panels {
