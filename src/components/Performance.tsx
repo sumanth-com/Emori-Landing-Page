@@ -29,10 +29,9 @@ export function Performance() {
           viewport={{ once: true, amount: 0.35 }}
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.div className="performance__pill" variants={reveal}>
-            <span className="performance__pill-mark" aria-hidden="true" />
+          <motion.p className="section-eyebrow" variants={reveal}>
             Proven Performance
-          </motion.div>
+          </motion.p>
           <motion.h2 className="performance__heading" variants={reveal}>
             Performance That Speaks for Itself
           </motion.h2>

@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { type MouseEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import elogo from '../assets/Elogo.png'
 import { luxuryEase } from '../lib/motion'
-import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from '../data/contact'
 import { scrollToSection } from '../lib/scrollToSection'
 
 export function Footer() {
   const navigate = useNavigate()
+  const year = new Date().getFullYear()
 
   const goHome = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
@@ -28,16 +29,14 @@ export function Footer() {
       transition={{ duration: 0.8, ease: luxuryEase }}
     >
       <div className="footer__rail">
-        <a href="/" className="footer__brand" onClick={goHome}>
-          EMORI
+        <a href="/" className="footer__brand" aria-label="EMORI home" onClick={goHome}>
+          <img src={elogo} alt="EMORI" className="footer__brand-logo" />
         </a>
-        <p className="footer__tagline">Luxury lab-grown diamond jewellery</p>
+        <p className="footer__copyright">© {year} EMORI. All rights reserved.</p>
         <div className="footer__meta">
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          <Link to="/privacy-policy">Privacy Policy</Link>
           <span className="footer__dot" aria-hidden="true" />
-          <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_DISPLAY}</a>
-          <span className="footer__dot" aria-hidden="true" />
-          <span>© {new Date().getFullYear()} EMORI</span>
+          <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
         </div>
       </div>
     </motion.footer>

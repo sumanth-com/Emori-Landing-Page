@@ -13,7 +13,7 @@ const faqs = [
     id: '02',
     question: 'How much do I need to invest?',
     answer:
-      'The total investment is ₹2.25 crore, covering the franchise fee, lease deposit, store setup, and inventory required to open your store.',
+      'The total investment is 2.3 crores, covering the franchise fee, lease deposit, store setup, and inventory required to open your store.',
   },
   {
     id: '03',
@@ -53,7 +53,7 @@ export function Faq() {
           viewport={{ once: true, amount: 0.45 }}
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.p className="faq__label" variants={reveal}>
+          <motion.p className="section-eyebrow" variants={reveal}>
             FAQs
           </motion.p>
           <motion.h2 className="faq__heading" variants={reveal}>

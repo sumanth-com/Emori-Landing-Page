@@ -2,11 +2,12 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import banner from '../assets/Banner.png'
+import mobileHero from '../assets/MobileHero.png'
 import { reveal, staggerSlow } from '../lib/motion'
 import { sectionPath } from '../lib/scrollToSection'
 
 const stats = [
-  { label: 'Investment', value: '₹2.25 Cr', detail: 'Total Investment' },
+  { label: 'Investment', value: '2.3 Crores', detail: 'Total Investment' },
   { label: 'Minimum Guarantee*', value: '15% Per Annum', detail: 'On Eligible Investment' },
   { label: 'Franchise Fee', value: '₹10L + GST', detail: 'One Time' },
   { label: 'Outlets', value: '3 Stores', detail: 'Across NCR' },
@@ -28,7 +29,8 @@ export function Hero() {
     <section id="top" ref={ref} className="hero">
       <motion.div className="hero__stage" style={{ opacity: heroFade }}>
         <motion.div className="hero__atmosphere" style={{ y: bgY }} aria-hidden="true">
-          <div className="hero__banner" style={{ backgroundImage: `url(${banner})` }} />
+          <div className="hero__banner hero__banner--desktop" style={{ backgroundImage: `url(${banner})` }} />
+          <div className="hero__banner hero__banner--mobile" style={{ backgroundImage: `url(${mobileHero})` }} />
           <div className="hero__veil" />
         </motion.div>
 
@@ -43,7 +45,7 @@ export function Hero() {
               <motion.div className="hero__copy-head" variants={reveal}>
                 <div className="hero__badge">
                   <span className="hero__badge-mark" aria-hidden="true" />
-                  Lab Grown Diamond Jewellery
+                  Franchise Investment Opportunity
                 </div>
 
                 <h1 className="hero__heading">
@@ -51,10 +53,14 @@ export function Hero() {
                 </h1>
               </motion.div>
 
-              <motion.p className="hero__lede" variants={reveal}>
+              <motion.p className="hero__lede hero__lede--full" variants={reveal}>
                 Partner with India&apos;s Shark Tank-backed lab-grown diamond brand. Company-operated
                 boutiques, protected territories, and 15% guaranteed returns per annum — a premium
                 franchise opportunity for discerning investors.
+              </motion.p>
+
+              <motion.p className="hero__lede hero__lede--short" variants={reveal}>
+                Shark Tank-backed brand · company-operated stores · 15% guaranteed returns.
               </motion.p>
 
               <motion.ul className="hero__stats" variants={reveal}>
@@ -73,14 +79,16 @@ export function Hero() {
                   className="btn btn--gold-gradient"
                   onClick={() => navigate(sectionPath('investment'))}
                 >
-                  Explore Franchise Opportunity
+                  <span className="hero__cta-full">Explore Franchise Opportunity</span>
+                  <span className="hero__cta-short">Explore Franchise</span>
                 </button>
                 <button
                   type="button"
                   className="btn btn--ghost-light"
-                  onClick={() => navigate(sectionPath('invitation'))}
+                  onClick={() => navigate(sectionPath('contact'))}
                 >
-                  Talk to Our Team
+                  <span className="hero__cta-full">Talk to Our Team</span>
+                  <span className="hero__cta-short">Talk to Team</span>
                 </button>
               </motion.div>
             </motion.div>

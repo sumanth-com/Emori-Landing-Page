@@ -5,7 +5,11 @@ import { pathToSectionId, scrollToSection } from '../lib/scrollToSection'
 const PAGE_TITLES: Record<string, string> = {
   '/': 'EMORI — Franchise Partnership',
   '/thank-you': 'Thank You | EMORI Franchise',
+  '/privacy-policy': 'Privacy Policy | EMORI',
+  '/terms-and-conditions': 'Terms & Conditions | EMORI',
 }
+
+const TOP_ONLY_PATHS = new Set(['/thank-you', '/privacy-policy', '/terms-and-conditions'])
 
 export function ScrollManager() {
   const { pathname } = useLocation()
@@ -15,10 +19,13 @@ export function ScrollManager() {
   }, [pathname])
 
   useEffect(() => {
-    const sectionId = pathToSectionId(pathname)
-    if (!sectionId) return
+    if (TOP_ONLY_PATHS.has(pathname)) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      return
+    }
 
-    if (sectionId === 'top') {
+    const sectionId = pathToSectionId(pathname)
+    if (!sectionId || sectionId === 'top') {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
       return
     }

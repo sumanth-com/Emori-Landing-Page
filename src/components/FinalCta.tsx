@@ -39,7 +39,7 @@ export function FinalCta() {
   const reduced = useReducedMotion()
 
   return (
-    <section id="invitation" className="finale finale--screen">
+    <section id="contact" className="finale finale--screen">
       <div className="finale__scene finale__scene--conversion">
         <div className="finale__layout">
           <motion.div
@@ -49,9 +49,9 @@ export function FinalCta() {
             viewport={{ once: true, amount: 0.35 }}
             variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
           >
-            <motion.span className="finale__pill" variants={reveal}>
+            <motion.p className="section-eyebrow" variants={reveal}>
               Contact
-            </motion.span>
+            </motion.p>
             <motion.h2 className="finale__heading" variants={reveal}>
               Get in Touch With Our Team
             </motion.h2>

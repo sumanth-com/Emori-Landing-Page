@@ -220,7 +220,7 @@ export function ApplicationForm({
               label="City / District"
               name="applicant_city"
               placeholder={
-                stateValue ? (isInline ? 'Select city' : 'Type or select city') : 'Select state first'
+                stateValue ? (isInline ? 'Select city' : 'Type or select city') : isInline ? 'Select city' : 'Select state first'
               }
               value={cityValue}
               required

@@ -11,6 +11,7 @@ import { Faq } from './components/Faq'
 import { FinalCta } from './components/FinalCta'
 import { ApplicationModal } from './components/ApplicationModal'
 import { ThankYouPage } from './components/ThankYouPage'
+import { PrivacyPolicyPage, TermsAndConditionsPage } from './components/LegalPages'
 import { ScrollManager } from './components/ScrollManager'
 import { CursorGlow } from './components/ui/CursorGlow'
 import { ApplicationModalProvider } from './context/ApplicationModalContext'
@@ -50,7 +51,10 @@ export default function App() {
           {SECTION_SLUGS.map((section) => (
             <Route key={section} path={`/${section}`} element={<Experience />} />
           ))}
+          <Route path="/invitation" element={<Experience />} />
           <Route path="/thank-you" element={<ThankYouPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
         </Routes>
         <ApplicationModal />
         <WhatsAppButton />

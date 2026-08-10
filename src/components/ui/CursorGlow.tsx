@@ -11,8 +11,12 @@ export function CursorGlow() {
     if (window.matchMedia('(pointer: coarse)').matches) return
 
     const onMove = (e: MouseEvent) => {
+      const target = e.target
+      const overContact =
+        target instanceof Element && Boolean(target.closest('#contact, .finale--screen'))
+
       setPos({ x: e.clientX, y: e.clientY })
-      setVisible(true)
+      setVisible(!overContact)
     }
     const onLeave = () => setVisible(false)
 

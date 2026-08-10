@@ -1,7 +1,21 @@
+import { Gem, MapPin, Receipt, Store, type LucideIcon } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { reveal } from '../lib/motion'
 
-const breakdown = [
+const breakdownIcons = {
+  gem: Gem,
+  location: MapPin,
+  store: Store,
+  fee: Receipt,
+} as const satisfies Record<string, LucideIcon>
+
+type BreakdownIcon = keyof typeof breakdownIcons
+
+const breakdown: {
+  component: string
+  amount: string
+  icon: BreakdownIcon
+}[] = [
   { component: 'Inventory Security Deposit', amount: '₹1.50 Cr', icon: 'gem' },
   { component: 'Lease & Registration Deposit', amount: '₹15–20 Lakhs*', icon: 'location' },
   { component: 'Store Setup / CapEx', amount: '₹50 Lakhs', icon: 'store' },
@@ -14,43 +28,12 @@ const revenueSlabs = [
   { sales: '₹50 Lakhs+', share: '8%' },
 ]
 
-function RowIcon({ type }: { type: string }) {
-  return (
-    <span className={`invest__row-icon invest__row-icon--${type}`} aria-hidden="true">
-      {type === 'gem' && (
-        <svg viewBox="0 0 16 16" fill="none">
-          <path d="M8 2 L13 6 L8 14 L3 6 Z" stroke="currentColor" strokeWidth="1.1" />
-        </svg>
-      )}
-      {type === 'location' && (
-        <svg viewBox="0 0 16 16" fill="none">
-          <path d="M8 2.5c2 0 3.5 1.6 3.5 3.5 0 2.6-3.5 7-3.5 7S4.5 8.6 4.5 6c0-1.9 1.5-3.5 3.5-3.5z" stroke="currentColor" strokeWidth="1.1" />
-          <circle cx="8" cy="6" r="1.2" stroke="currentColor" strokeWidth="1" />
-        </svg>
-      )}
-      {type === 'store' && (
-        <svg viewBox="0 0 16 16" fill="none">
-          <path d="M3 6.5h10v7H3zM5 6.5V4.5h6v2" stroke="currentColor" strokeWidth="1.1" />
-        </svg>
-      )}
-      {type === 'fee' && (
-        <svg viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.1" />
-          <path d="M8 5.5v5M6.5 7h2.5c.8 0 1.5.5 1.5 1.2s-.7 1.2-1.5 1.2H6.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-        </svg>
-      )}
-    </span>
-  )
-}
+function RowIcon({ type }: { type: BreakdownIcon }) {
+  const Icon = breakdownIcons[type]
 
-function HighlightIcon({ type }: { type: string }) {
   return (
-    <span className={`invest__highlight-icon invest__highlight-icon--${type}`} aria-hidden="true">
-      <svg viewBox="0 0 20 20" fill="none">
-        {type === 'shield' && (
-          <path d="M10 3.5l5.5 2v4.8c0 3.2-2.4 5.5-5.5 6.7-3.1-1.2-5.5-3.5-5.5-6.7V5.5L10 3.5z" stroke="currentColor" strokeWidth="1.2" />
-        )}
-      </svg>
+    <span className="invest__row-icon" aria-hidden="true">
+      <Icon strokeWidth={1.75} />
     </span>
   )
 }
@@ -68,10 +51,9 @@ export function Investment() {
           viewport={{ once: true, amount: 0.4 }}
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.div className="invest__pill" variants={reveal}>
-            <span className="invest__pill-mark" aria-hidden="true" />
-            INVESTMENT &amp; RETURNS
-          </motion.div>
+          <motion.p className="section-eyebrow" variants={reveal}>
+            Investment &amp; Returns
+          </motion.p>
           <motion.h2 className="invest__heading" variants={reveal}>
             An Investment Built Around Inventory, Retail &amp; Brand
           </motion.h2>
@@ -90,9 +72,11 @@ export function Investment() {
         >
           <motion.div className="invest__breakdown invest__panel" variants={reveal}>
             <h3 className="invest__panel-title">Investment Breakdown</h3>
-            <p className="invest__panel-hero">₹2.25 Crores*</p>
+            <div className="invest__panel-head">
+              <p className="invest__panel-hero">2.3 Crores*</p>
+            </div>
             <div className="invest__panel-body">
-              <div className="invest__table-wrap">
+              <div className="invest__table-wrap invest__breakdown-table">
                 <table className="invest__table">
                   <thead>
                     <tr>
@@ -115,6 +99,15 @@ export function Investment() {
                   </tbody>
                 </table>
               </div>
+              <ul className="invest__breakdown-cards" aria-label="Investment breakdown">
+                {breakdown.map((row) => (
+                  <li key={row.component} className="invest__breakdown-card">
+                    <RowIcon type={row.icon} />
+                    <span className="invest__breakdown-card-label">{row.component}</span>
+                    <span className="invest__breakdown-card-amount">{row.amount}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
             <p className="invest__panel-note invest__panel-note--light">
               Indicative total investment per the current franchise deck. Lease deposit and
@@ -122,23 +115,23 @@ export function Investment() {
             </p>
           </motion.div>
 
-          <motion.div className="invest__returns invest__panel invest__panel--dark" variants={reveal}>
-            <h3 className="invest__panel-title invest__panel-title--light">Returns Structure</h3>
+          <motion.div className="invest__returns invest__panel" variants={reveal}>
+            <h3 className="invest__panel-title">Returns Structure</h3>
+            <div className="invest__panel-head invest__returns-hero">
+              <p className="invest__panel-hero">15%*</p>
+              <p className="invest__returns-summary">
+                <span className="invest__returns-summary-line">
+                  Minimum Guarantee Per Annum ·
+                </span>
+                <span className="invest__returns-summary-line">
+                  Or Revenue Share (Whichever Is Higher)
+                </span>
+              </p>
+            </div>
 
             <div className="invest__panel-body">
-              <div className="invest__mg-box">
-                <HighlightIcon type="shield" />
-                <p className="invest__mg-line">
-                  <span className="invest__mg-label">Minimum Guarantee*</span>
-                  <span className="invest__mg-value">15%</span>
-                  <span className="invest__mg-period">Per Annum</span>
-                </p>
-              </div>
-
-              <p className="invest__returns-divider">Or Revenue Share (Whichever Is Higher)</p>
-
-              <div className="invest__table-wrap">
-                <table className="invest__table invest__table--dark">
+              <div className="invest__table-wrap invest__returns-table">
+                <table className="invest__table">
                   <thead>
                     <tr>
                       <th scope="col">Net Sales</th>
@@ -155,9 +148,17 @@ export function Investment() {
                   </tbody>
                 </table>
               </div>
+              <ul className="invest__returns-cards" aria-label="Revenue share by net sales">
+                {revenueSlabs.map((row) => (
+                  <li key={row.sales} className="invest__returns-card">
+                    <span className="invest__returns-card-label">{row.sales}</span>
+                    <span className="invest__returns-card-value">{row.share}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <p className="invest__panel-note invest__panel-note--dark">
+            <p className="invest__panel-note invest__panel-note--light">
               Net Sales after deducting GST, returns, refunds, cancellations, discounts and rebates.
               Partner receives whichever is higher — minimum guarantee or revenue share — subject to
               the final Franchise Agreement.

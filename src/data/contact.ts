@@ -7,5 +7,5 @@ export const CONTACT_WEBSITE_URL = 'https://www.ifranchise.in'
 export const BOOK_A_CALL_URL = 'https://cal.com/ifranchise.in/emori'
 
 export const CONTACT_WHATSAPP_URL = `https://wa.me/${CONTACT_WHATSAPP}?text=${encodeURIComponent(
-  'Hello EMORI, I would like to know more about the franchise opportunity.',
+  'Hello iFranchise, I am interested in the EMORI Lab-Grown Diamond franchise opportunity and would like to learn more. Please share the next steps.',
 )}`

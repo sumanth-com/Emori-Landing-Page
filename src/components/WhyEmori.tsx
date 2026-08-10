@@ -71,10 +71,9 @@ export function WhyEmori() {
             visible: { transition: { staggerChildren: 0.1 } },
           }}
         >
-          <motion.div className="why-emori__pill" variants={reveal}>
-            <span className="why-emori__pill-mark" aria-hidden="true" />
+          <motion.p className="section-eyebrow" variants={reveal}>
             Why EMORI
-          </motion.div>
+          </motion.p>
           <motion.h2 id="why-emori-heading" className="why-emori__heading" variants={reveal}>
             Built for a Jewellery Business Ready to Scale
           </motion.h2>

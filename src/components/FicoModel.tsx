@@ -5,17 +5,17 @@ const steps = [
   {
     num: '01',
     title: 'You Invest',
-    text: 'Invest in an EMORI store and become a franchise partner.',
+    text: 'Invest in an EMORI boutique and become a franchise partner.',
   },
   {
     num: '02',
-    title: 'iFranchise Operates',
-    text: 'Our team manages store operations, people, systems and execution on your behalf.',
+    title: 'EMORI Operates',
+    text: 'EMORI manages store operations, people, systems, and execution on your behalf.',
   },
   {
     num: '03',
     title: 'You Earn',
-    text: 'Receive agreed returns based on the commercial terms of the franchise model.',
+    text: 'Receive agreed returns based on the commercial terms of your franchise agreement.',
   },
 ]
 
@@ -50,20 +50,16 @@ export function FicoModel() {
           viewport={{ once: true, amount: 0.4 }}
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.div className="fico__pill" variants={reveal}>
-            <span className="fico__pill-mark" aria-hidden="true" />
+          <motion.p className="section-eyebrow" variants={reveal}>
             The EMORI Model
-          </motion.div>
+          </motion.p>
           <motion.h2 className="fico__heading" variants={reveal}>
             You Invest. We Operate. EMORI Grows With You.
           </motion.h2>
           <p className="fico__subheading">
-            <span className="fico__subheading-line">
-              EMORI follows the FICO model — Franchise Invested, Company Operated.
-            </span>
-            <span className="fico__subheading-line">
-              You invest. iFranchise manages operations, systems, people and growth of your store.
-            </span>
+            Franchise Invested, Company Operated — the FICO model designed for discerning
+            investors. You invest; EMORI manages operations, systems, people, and growth of your
+            store.
           </p>
         </motion.header>
 

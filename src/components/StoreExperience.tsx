@@ -9,6 +9,7 @@ import noida4 from '../assets/Noida 4.jpeg'
 import noida5 from '../assets/Noida 5.jpeg'
 import noidaFront from '../assets/Noida front.jpeg'
 import { luxuryEase, reveal } from '../lib/motion'
+import { scrollToSection } from '../lib/scrollToSection'
 
 const dwarkaModules = import.meta.glob<string>('../assets/dwarka (*).jpeg', {
   eager: true,
@@ -80,10 +81,7 @@ const locations = [
 
 const AUTO_PLAY_MS = 2800
 
-const storeSpecs = [
-  { label: 'Store Size', value: '500–1,000 square feet' },
-  { label: 'Preferred Locations', value: 'Premium High Street or Popular Mall' },
-]
+const storeSpecs = [{ label: 'Store Size', value: '500–1,000 square feet' }]
 
 function slideOffset(index: number, active: number, total: number) {
   let diff = index - active
@@ -155,10 +153,9 @@ export function StoreExperience() {
           viewport={{ once: true, amount: 0.4 }}
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.div className="store__pill" variants={reveal}>
-            <span className="store__pill-mark" aria-hidden="true" />
+          <motion.p className="section-eyebrow" variants={reveal}>
             Our Stores
-          </motion.div>
+          </motion.p>
           <motion.h2 className="store__heading" variants={reveal}>
             A Growing Retail Presence Across NCR
           </motion.h2>
@@ -310,15 +307,25 @@ export function StoreExperience() {
         </motion.div>
         </div>
 
-        <motion.p
-          className="store__shimmer store__shimmer--solo"
+        <motion.div
+          className="store__footer-cta"
           initial={reduced ? false : { opacity: 0, y: 12 }}
           whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: luxuryEase }}
         >
-          The next EMORI store could be in your city.
-        </motion.p>
+          <p className="store__footer-text">The next EMORI store could be in your city.</p>
+          <span className="store__footer-arrow" aria-hidden="true">
+            →
+          </span>
+          <button
+            type="button"
+            className="store__footer-link"
+            onClick={() => scrollToSection('contact')}
+          >
+            Contact Us
+          </button>
+        </motion.div>
       </div>
     </section>
   )
