@@ -1,7 +1,11 @@
-/** Google Apps Script Web App URL from `.env` */
+/** Google Apps Script Web App URL (`.env`, `.env.production`, or hosting env vars) */
 export function getGoogleScriptUrl() {
   const url = import.meta.env.VITE_GOOGLE_SCRIPT_URL as string | undefined
   return url?.trim() || ''
+}
+
+export function isFormConfigured() {
+  return Boolean(getGoogleScriptUrl())
 }
 
 export function getThankYouRedirectUrl() {

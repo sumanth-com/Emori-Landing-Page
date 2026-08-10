@@ -77,7 +77,9 @@ export function ApplicationForm({
 
     if (!scriptUrl) {
       e.preventDefault()
-      setSubmitError('Form endpoint is not configured. Add VITE_GOOGLE_SCRIPT_URL to your .env file.')
+      setSubmitError(
+        'Form is not connected yet. Set VITE_GOOGLE_SCRIPT_URL in .env or redeploy after updating .env.production.',
+      )
       return
     }
 
@@ -95,8 +97,7 @@ export function ApplicationForm({
       !stateValue ||
       !cityValue ||
       !String(data.get('applicant_budget') ?? '').trim() ||
-      !String(data.get('applicant_location') ?? '').trim() ||
-      data.get('consent') !== 'on'
+      !String(data.get('applicant_location') ?? '').trim()
     ) {
       e.preventDefault()
       setSubmitError('Please complete all required fields.')
@@ -150,6 +151,7 @@ export function ApplicationForm({
         }}
       >
         <input type="hidden" name="redirectUrl" value={getThankYouRedirectUrl()} />
+        <input type="hidden" name="consent" value="on" />
         <input
           type="text"
           name="fake-address"
@@ -260,11 +262,6 @@ export function ApplicationForm({
         )}
 
         <div className={`app-form__footer${isInline ? ' app-form__footer--card' : ''}`}>
-          <motion.label className="app-form__consent" variants={fieldReveal}>
-            <input type="checkbox" name="consent" required />
-            <span>I agree to be contacted by EMORI.</span>
-          </motion.label>
-
           <motion.div className="app-form__actions" variants={fieldReveal}>
             {showDismiss && onDismiss && (
               <button type="button" className="btn app-form__dismiss" onClick={onDismiss}>
