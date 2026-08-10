@@ -1,346 +1,170 @@
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from 'framer-motion'
-import { useRef } from 'react'
-import { CountUp } from './ui/CountUp'
-import { useMouseParallax } from '../hooks/useMouseParallax'
-import { luxuryEase, reveal } from '../lib/motion'
+import { motion, useReducedMotion } from 'framer-motion'
+import { reveal } from '../lib/motion'
 
-type BreakdownCard = {
-  id: string
-  title: string
-  value: number
-  decimals?: number
-  suffix: string
-  prefix: string
-  detail: string
-  className: string
-  depth: number
-  angle: number
-}
-
-const breakdown: BreakdownCard[] = [
-  {
-    id: '01',
-    title: 'Franchise Fee',
-    value: 5,
-    suffix: ' Lakh',
-    prefix: '₹',
-    detail: 'One-time franchise rights.',
-    className: 'invest__card--a',
-    depth: 1,
-    angle: Math.PI / 4,
-  },
-  {
-    id: '02',
-    title: 'Lease Deposit',
-    value: 20,
-    suffix: ' Lakh',
-    prefix: '₹',
-    detail: 'Premium retail location.',
-    className: 'invest__card--b',
-    depth: 0.7,
-    angle: (3 * Math.PI) / 4,
-  },
-  {
-    id: '03',
-    title: 'Store Setup',
-    value: 50,
-    suffix: ' Lakh',
-    prefix: '₹',
-    detail: 'Luxury interiors and branding.',
-    className: 'invest__card--c',
-    depth: 0.85,
-    angle: (5 * Math.PI) / 4,
-  },
-  {
-    id: '04',
-    title: 'Inventory Deposit',
-    value: 1.5,
-    decimals: 2,
-    suffix: ' Crore',
-    prefix: '₹',
-    detail: 'Premium jewellery inventory.',
-    className: 'invest__card--d',
-    depth: 0.6,
-    angle: (7 * Math.PI) / 4,
-  },
+const breakdown = [
+  { component: 'Inventory Security Deposit', amount: '₹1.50 Cr', icon: 'gem' },
+  { component: 'Lease & Registration Deposit', amount: '₹15–20 Lakhs*', icon: 'location' },
+  { component: 'Store Setup / CapEx', amount: '₹50 Lakhs', icon: 'store' },
+  { component: 'Franchise Fee', amount: '₹10 Lakhs + GST*', icon: 'fee' },
 ]
 
-const chips = [
-  '5 Year Agreement',
-  '2 Year Lock-in',
-  '15% Guaranteed Return',
-  '500–1000 sq.ft Premium Location',
+const revenueSlabs = [
+  { sales: 'Up to ₹30 Lakhs', share: '12%' },
+  { sales: '₹30–50 Lakhs', share: '10%' },
+  { sales: '₹50 Lakhs+', share: '8%' },
 ]
 
-const cardReveal = {
-  hidden: {
-    opacity: 0,
-    y: 50,
-    scale: 0.96,
-    filter: 'blur(10px)',
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: 'blur(0px)',
-    transition: { duration: 0.9, ease: luxuryEase },
-  },
-}
-
-const chipReveal = {
-  hidden: {
-    opacity: 0,
-    y: 28,
-    filter: 'blur(8px)',
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.85, ease: luxuryEase },
-  },
-}
-
-function InvestCard({
-  card,
-  orbit,
-  mouse,
-  reduced,
-}: {
-  card: BreakdownCard
-  orbit: MotionValue<number>
-  mouse: { x: number; y: number }
-  reduced: boolean
-}) {
-  const orbitX = useTransform(orbit, (v) => Math.cos(card.angle + v * 0.35) * 4)
-  const orbitY = useTransform(orbit, (v) => Math.sin(card.angle + v * 0.35) * 4)
-
+function RowIcon({ type }: { type: string }) {
   return (
-    <motion.article
-      className={`invest__card ${card.className}`}
-      variants={reduced ? undefined : cardReveal}
-      style={
-        reduced
-          ? undefined
-          : {
-              x: orbitX,
-              y: orbitY,
-            }
-      }
-      whileHover={
-        reduced
-          ? undefined
-          : {
-              y: -6,
-              rotate: 2,
-              transition: { duration: 0.7, ease: luxuryEase },
-            }
-      }
-    >
-      <motion.div
-        className="invest__card-inner"
-        style={
-          reduced
-            ? undefined
-            : {
-                x: mouse.x * card.depth * 0.4,
-                y: mouse.y * card.depth * 0.4,
-              }
-        }
-      >
-        <span className="invest__card-index">{card.id}</span>
-        <h3 className="invest__card-title">{card.title}</h3>
-        <p className="invest__card-value">
-          <CountUp
-            value={card.value}
-            decimals={card.decimals}
-            prefix={card.prefix}
-            suffix={card.suffix}
-          />
-        </p>
-        <p className="invest__card-detail">{card.detail}</p>
-        <span className="invest__card-glow" aria-hidden="true" />
-      </motion.div>
-    </motion.article>
+    <span className={`invest__row-icon invest__row-icon--${type}`} aria-hidden="true">
+      {type === 'gem' && (
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 2 L13 6 L8 14 L3 6 Z" stroke="currentColor" strokeWidth="1.1" />
+        </svg>
+      )}
+      {type === 'location' && (
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 2.5c2 0 3.5 1.6 3.5 3.5 0 2.6-3.5 7-3.5 7S4.5 8.6 4.5 6c0-1.9 1.5-3.5 3.5-3.5z" stroke="currentColor" strokeWidth="1.1" />
+          <circle cx="8" cy="6" r="1.2" stroke="currentColor" strokeWidth="1" />
+        </svg>
+      )}
+      {type === 'store' && (
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 6.5h10v7H3zM5 6.5V4.5h6v2" stroke="currentColor" strokeWidth="1.1" />
+        </svg>
+      )}
+      {type === 'fee' && (
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.1" />
+          <path d="M8 5.5v5M6.5 7h2.5c.8 0 1.5.5 1.5 1.2s-.7 1.2-1.5 1.2H6.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        </svg>
+      )}
+    </span>
+  )
+}
+
+function HighlightIcon({ type }: { type: string }) {
+  return (
+    <span className={`invest__highlight-icon invest__highlight-icon--${type}`} aria-hidden="true">
+      <svg viewBox="0 0 20 20" fill="none">
+        {type === 'shield' && (
+          <path d="M10 3.5l5.5 2v4.8c0 3.2-2.4 5.5-5.5 6.7-3.1-1.2-5.5-3.5-5.5-6.7V5.5L10 3.5z" stroke="currentColor" strokeWidth="1.2" />
+        )}
+      </svg>
+    </span>
   )
 }
 
 export function Investment() {
   const reduced = useReducedMotion()
-  const sectionRef = useRef<HTMLElement>(null)
-  const mouse = useMouseParallax(8)
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-
-  const orbRotate = useTransform(scrollYProgress, [0, 1], [-6, 8])
-  const orbit = useTransform(scrollYProgress, [0, 1], [0, 1])
-  const dissolve = useTransform(scrollYProgress, [0.72, 0.98], [0, 1])
 
   return (
-    <section id="investment" ref={sectionRef} className="invest">
-      <div className="invest__inflow" aria-hidden="true">
-        <span className="invest__inflow-glow" />
-      </div>
-
-      <div className="invest__atmosphere" aria-hidden="true">
-        <span className="invest__radial invest__radial--a" />
-        <span className="invest__radial invest__radial--b" />
-        <span className="invest__diamond invest__diamond--1" />
-        <span className="invest__diamond invest__diamond--2" />
-        <span className="invest__grain" />
-      </div>
-
+    <section id="investment" className="invest">
       <div className="invest__scene">
-        <motion.div
+        <motion.header
           className="invest__intro"
           initial={reduced ? false : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
-          viewport={{ once: true, amount: 0.5 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.12 } },
-          }}
+          viewport={{ once: true, amount: 0.4 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.p className="invest__label" variants={reveal}>
-            Investment Overview
-          </motion.p>
+          <motion.div className="invest__pill" variants={reveal}>
+            <span className="invest__pill-mark" aria-hidden="true" />
+            INVESTMENT &amp; RETURNS
+          </motion.div>
           <motion.h2 className="invest__heading" variants={reveal}>
-            A Premium Investment,
-            <br />
-            <em>Designed for Long-Term Growth.</em>
+            An Investment Built Around Inventory, Retail &amp; Brand
           </motion.h2>
-          <motion.p className="invest__lede" variants={reveal}>
-            Everything required to launch your EMORI luxury jewellery business with complete
-            operational support.
-          </motion.p>
-        </motion.div>
-
-        <div className="invest__constellation">
-          <svg className="invest__lines" viewBox="0 0 800 420" fill="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="investLineGold" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#d4af37" stopOpacity="0.15" />
-                <stop offset="50%" stopColor="#d4af37" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#d4af37" stopOpacity="0.15" />
-              </linearGradient>
-            </defs>
-            {[
-              'M 400 210 L 140 90',
-              'M 400 210 L 660 90',
-              'M 400 210 L 140 330',
-              'M 400 210 L 660 330',
-            ].map((d, i) => (
-              <motion.path
-                key={d}
-                d={d}
-                stroke="url(#investLineGold)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                initial={reduced ? false : { pathLength: 0, opacity: 0 }}
-                whileInView={reduced ? undefined : { pathLength: 1, opacity: 1 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{
-                  duration: 1.15,
-                  ease: luxuryEase,
-                  delay: 0.25 + i * 0.12,
-                }}
-              />
-            ))}
-          </svg>
-
-          <motion.div
-            className="invest__orb"
-            style={reduced ? undefined : { rotate: orbRotate }}
-            initial={reduced ? false : { opacity: 0, scale: 0.92, filter: 'blur(12px)' }}
-            whileInView={
-              reduced ? undefined : { opacity: 1, scale: 1, filter: 'blur(0px)' }
-            }
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 1.15, ease: luxuryEase }}
-          >
-            <motion.div
-              className="invest__orb-core"
-              animate={
-                reduced
-                  ? undefined
-                  : { scale: [1, 1.035, 1], opacity: [0.92, 1, 0.92] }
-              }
-              transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <span className="invest__orb-sheen" aria-hidden="true" />
-              <span className="invest__orb-ring" aria-hidden="true" />
-              <p className="invest__orb-value">
-                ₹<CountUp value={2.25} decimals={2} /> Cr
-              </p>
-              <p className="invest__orb-label">Total Investment</p>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="invest__cards"
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.14, delayChildren: 0.2 } },
-            }}
-            initial={reduced ? false : 'hidden'}
-            whileInView={reduced ? undefined : 'visible'}
-            viewport={{ once: true, amount: 0.25 }}
-          >
-            {breakdown.map((card) => (
-              <InvestCard
-                key={card.id}
-                card={card}
-                orbit={orbit}
-                mouse={mouse}
-                reduced={!!reduced}
-              />
-            ))}
-          </motion.div>
-        </div>
+          <p className="invest__subheading">
+            A clear view of the investment structure and potential returns under the EMORI
+            franchise model.
+          </p>
+        </motion.header>
 
         <motion.div
-          className="invest__chips"
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
-          }}
+          className="invest__layout"
           initial={reduced ? false : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
-          viewport={{ once: true, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          {chips.map((chip) => (
-            <motion.span key={chip} className="invest__chip" variants={chipReveal}>
-              {chip}
-            </motion.span>
-          ))}
+          <motion.div className="invest__breakdown invest__panel" variants={reveal}>
+            <h3 className="invest__panel-title">Investment Breakdown</h3>
+            <p className="invest__panel-hero">₹2.25 Crores*</p>
+            <div className="invest__panel-body">
+              <div className="invest__table-wrap">
+                <table className="invest__table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Component</th>
+                      <th scope="col">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {breakdown.map((row) => (
+                      <tr key={row.component}>
+                        <td>
+                          <span className="invest__table-component">
+                            <RowIcon type={row.icon} />
+                            {row.component}
+                          </span>
+                        </td>
+                        <td>{row.amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p className="invest__panel-note invest__panel-note--light">
+              Indicative total investment per the current franchise deck. Lease deposit and
+              franchise fee figures to be confirmed in the final Franchise Agreement.
+            </p>
+          </motion.div>
+
+          <motion.div className="invest__returns invest__panel invest__panel--dark" variants={reveal}>
+            <h3 className="invest__panel-title invest__panel-title--light">Returns Structure</h3>
+
+            <div className="invest__panel-body">
+              <div className="invest__mg-box">
+                <HighlightIcon type="shield" />
+                <p className="invest__mg-line">
+                  <span className="invest__mg-label">Minimum Guarantee*</span>
+                  <span className="invest__mg-value">15%</span>
+                  <span className="invest__mg-period">Per Annum</span>
+                </p>
+              </div>
+
+              <p className="invest__returns-divider">Or Revenue Share (Whichever Is Higher)</p>
+
+              <div className="invest__table-wrap">
+                <table className="invest__table invest__table--dark">
+                  <thead>
+                    <tr>
+                      <th scope="col">Net Sales</th>
+                      <th scope="col">Revenue Share</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {revenueSlabs.map((row) => (
+                      <tr key={row.sales}>
+                        <td>{row.sales}</td>
+                        <td>{row.share}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <p className="invest__panel-note invest__panel-note--dark">
+              Net Sales after deducting GST, returns, refunds, cancellations, discounts and rebates.
+              Partner receives whichever is higher — minimum guarantee or revenue share — subject to
+              the final Franchise Agreement.
+            </p>
+          </motion.div>
         </motion.div>
       </div>
-
-      <motion.div className="invest__dissolve" style={{ opacity: dissolve }} aria-hidden="true">
-        {Array.from({ length: 18 }).map((_, i) => (
-          <span
-            key={i}
-            className="invest__particle"
-            style={{
-              left: `${18 + ((i * 13) % 64)}%`,
-              top: `${30 + ((i * 17) % 40)}%`,
-              animationDelay: `${i * 0.08}s`,
-            }}
-          />
-        ))}
-      </motion.div>
-
-      <div className="invest__bridge" aria-hidden="true" />
     </section>
   )
 }

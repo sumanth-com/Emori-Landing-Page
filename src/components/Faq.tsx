@@ -1,44 +1,42 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useState } from 'react'
-import { useApplicationModal } from '../context/ApplicationModalContext'
 import { luxuryEase, reveal } from '../lib/motion'
 
 const faqs = [
   {
-    id: 'experience',
-    question: 'Do I need jewellery business experience?',
+    id: '01',
+    question: 'Do I need prior jewelry business experience?',
     answer:
-      'No. EMORI’s FICO model is designed for investors who want ownership without operating complexity. Our team manages hiring, training, inventory and daily retail excellence.',
+      'No. EMORI operates on a FICO (Franchise Invested, Company Operated) model. So you just have to invest in the business, while our experienced team manages the day-to-day operations.',
   },
   {
-    id: 'investment',
-    question: 'How much is the investment?',
+    id: '02',
+    question: 'How much do I need to invest?',
     answer:
-      'The total investment is approximately ₹2.25 Crore, covering franchise rights, lease deposit, luxury store setup and premium jewellery inventory — with a clear path to returns.',
+      'The total investment is ₹2.25 crore, covering the franchise fee, lease deposit, store setup, and inventory required to open your store.',
   },
   {
-    id: 'support',
-    question: 'What support will EMORI provide?',
+    id: '03',
+    question: 'What support will I receive after investing?',
     answer:
-      'From salon architecture and branding to marketing, clientelling systems and continuous merchandising counsel — you receive full operational partnership, not a handbook.',
+      'EMORI supports you with store operations, marketing, brand guidelines, inventory management, and everything needed to run your franchise smoothly.',
   },
   {
-    id: 'why-emori',
-    question: 'Why choose EMORI?',
+    id: '04',
+    question: 'Why choose EMORI over other jewelry franchise opportunities?',
     answer:
-      'Shark Tank backed, certified lab-grown jewellery, company-operated stores and protected territories — a premium house built for long-horizon brand equity.',
+      'EMORI follows an omnichannel strategy that combines online and offline retail. This helps drive customer demand and creates more opportunities for your store to grow.',
   },
   {
-    id: 'lab-grown',
-    question: 'Why invest in lab-grown diamonds?',
+    id: '05',
+    question: 'Why is now the right time to invest in lab-grown diamonds?',
     answer:
-      'Lab-grown diamonds combine luxury brilliance with ethical clarity and accessible premium pricing — one of India’s fastest-growing jewellery categories with enduring demand.',
+      'Consumer awareness around sustainability is changing how people shop for jewelry. This shift in consumer demand is creating new opportunities in the lab-grown diamond market.',
   },
 ]
 
 export function Faq() {
   const reduced = useReducedMotion()
-  const { openApplication } = useApplicationModal()
   const [openId, setOpenId] = useState<string | null>(faqs[0].id)
 
   const toggle = (id: string) => {
@@ -47,42 +45,28 @@ export function Faq() {
 
   return (
     <section id="faq" className="faq">
-      <div className="faq__atmosphere" aria-hidden="true">
-        <span className="faq__radial faq__radial--a" />
-        <span className="faq__radial faq__radial--b" />
-        <span className="faq__grain" />
-      </div>
-
       <div className="faq__scene">
-        <motion.div
+        <motion.header
           className="faq__intro"
           initial={reduced ? false : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
           viewport={{ once: true, amount: 0.45 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.1 } },
-          }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
           <motion.p className="faq__label" variants={reveal}>
-            Frequently Asked Questions
+            FAQs
           </motion.p>
           <motion.h2 className="faq__heading" variants={reveal}>
-            Everything You Need Before Becoming
-            <br />
-            <em>An EMORI Partner.</em>
+            Your Questions, Answered
           </motion.h2>
-        </motion.div>
+        </motion.header>
 
         <motion.div
           className="faq__accordion"
           initial={reduced ? false : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
           viewport={{ once: true, amount: 0.25 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.06 } },
-          }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.06 } } }}
         >
           {faqs.map((item) => {
             const isOpen = openId === item.id
@@ -111,6 +95,7 @@ export function Faq() {
                   id={`faq-trigger-${item.id}`}
                   onClick={() => toggle(item.id)}
                 >
+                  <span className="faq__card-num">{item.id}</span>
                   <span className="faq__card-question">{item.question}</span>
                   <span className="faq__card-icon" aria-hidden="true">
                     {isOpen ? '−' : '+'}
@@ -136,22 +121,7 @@ export function Faq() {
             )
           })}
         </motion.div>
-
-        <div className="faq__footer">
-          <p className="faq__prompt">
-            Still have questions? <em>Let&apos;s discuss your investment.</em>
-          </p>
-          <button
-            type="button"
-            className="btn btn--gold-gradient faq__cta"
-            onClick={openApplication}
-          >
-            Book a Private Consultation
-          </button>
-        </div>
       </div>
-
-      <div className="faq__bridge" aria-hidden="true" />
     </section>
   )
 }

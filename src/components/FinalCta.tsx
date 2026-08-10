@@ -1,268 +1,101 @@
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from 'framer-motion'
-import { useRef } from 'react'
-import { useMouseParallax } from '../hooks/useMouseParallax'
-import { useApplicationModal } from '../context/ApplicationModalContext'
+import { motion, useReducedMotion } from 'framer-motion'
+import { Footer } from './Footer'
 import { luxuryEase, reveal } from '../lib/motion'
+import { ApplicationForm } from './ApplicationForm'
 
-const badges = [
+const trustHighlights = [
   'Shark Tank Backed',
-  'Company Operated',
-  'Premium Jewellery Brand',
   '15% Guaranteed Return',
+  'Company Operated',
+  'Premium Brand',
 ]
 
-function FinaleDiamond() {
-  const reduced = useReducedMotion()
-  const mouse = useMouseParallax(8)
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  })
-  const finalGlow = useTransform(scrollYProgress, [0.55, 0.95], [0.35, 1])
-
+function MailIcon() {
   return (
-    <motion.div
-      ref={ref}
-      className="finale__diamond"
-      style={{
-        x: reduced ? 0 : mouse.x * 0.55,
-        y: reduced ? 0 : mouse.y * 0.45,
-      }}
-      aria-hidden="true"
-    >
-      <motion.div className="finale__diamond-glow" style={{ opacity: finalGlow }} />
-      <motion.div
-        className="finale__diamond-core"
-        animate={
-          reduced
-            ? undefined
-            : {
-                y: [0, -12, 0],
-                rotateY: [-8, 8, -8],
-                rotateZ: [-2, 2, -2],
-              }
-        }
-        transition={{
-          y: { duration: 9, repeat: Infinity, ease: 'easeInOut' },
-          rotateY: { duration: 16, repeat: Infinity, ease: 'easeInOut' },
-          rotateZ: { duration: 14, repeat: Infinity, ease: 'easeInOut' },
-        }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <svg className="finale__diamond-svg" viewBox="0 0 240 280" fill="none">
-          <defs>
-            <linearGradient id="finaleFace" x1="20%" y1="0%" x2="90%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-              <stop offset="40%" stopColor="#f3ebe0" stopOpacity="0.75" />
-              <stop offset="100%" stopColor="#d4af37" stopOpacity="0.45" />
-            </linearGradient>
-            <linearGradient id="finaleEdge" x1="50%" y1="0%" x2="50%" y2="100%">
-              <stop offset="0%" stopColor="#fff8e8" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#d4af37" stopOpacity="0.65" />
-            </linearGradient>
-            <linearGradient id="finaleShine" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
-              <stop offset="45%" stopColor="#ffffff" stopOpacity="0.85" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-            </linearGradient>
-            <filter id="finaleGlow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="3.5" result="b" />
-              <feMerge>
-                <feMergeNode in="b" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          <g filter="url(#finaleGlow)">
-            <path
-              d="M120 18 L210 95 L120 262 L30 95 Z"
-              fill="url(#finaleFace)"
-              stroke="url(#finaleEdge)"
-              strokeWidth="1.4"
-            />
-            <path d="M120 18 L165 95 L120 262 L75 95 Z" fill="rgba(255,255,255,0.28)" />
-            <path d="M30 95 H210 L120 128 Z" fill="rgba(255,255,255,0.42)" />
-            <path
-              d="M75 95 L120 128 L165 95"
-              stroke="rgba(212,175,55,0.45)"
-              strokeWidth="1"
-            />
-            <path d="M120 18 L120 262" stroke="rgba(255,255,255,0.45)" strokeWidth="0.8" />
-          </g>
-          <motion.rect
-            x="40"
-            y="40"
-            width="160"
-            height="200"
-            fill="url(#finaleShine)"
-            opacity="0.35"
-            style={{ mixBlendMode: 'screen' }}
-            animate={reduced ? undefined : { x: [-40, 60, -40], opacity: [0.1, 0.45, 0.1] }}
-            transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </svg>
-      </motion.div>
-    </motion.div>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 7.5l8 5.5 8-5.5M4 7.5h16v9H4v-9z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M8.5 5.5h2l1.2 3-1.8 1.2a11 11 0 005.6 5.6L16.5 14l3 1.2v2a2 2 0 01-2 2C10.5 19.2 4.8 13.5 4.8 7.5a2 2 0 012-2z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
 
 export function FinalCta() {
   const reduced = useReducedMotion()
-  const mouse = useMouseParallax(8)
-  const { openApplication } = useApplicationModal()
 
   return (
-    <section id="invitation" className="finale">
-      <div className="finale__atmosphere" aria-hidden="true">
-        <span className="finale__beam finale__beam--a" />
-        <span className="finale__beam finale__beam--b" />
-        <span className="finale__volume" />
-        <span className="finale__volume finale__volume--gold" />
-        <div className="finale__particles">
-          {Array.from({ length: 22 }).map((_, i) => (
-            <motion.span
-              key={i}
-              className={`finale__particle finale__particle--${i % 4}`}
-              style={{
-                left: `${6 + ((i * 17) % 88)}%`,
-                top: `${8 + ((i * 23) % 84)}%`,
-              }}
-              animate={
-                reduced
-                  ? undefined
-                  : {
-                      opacity: [0.08, 0.7, 0.08],
-                      y: [0, -16 - (i % 5) * 3, 0],
-                    }
-              }
-              transition={{
-                duration: 7 + (i % 5),
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: i * 0.28,
-              }}
-            />
-          ))}
-        </div>
-        <span className="finale__grain" />
-      </div>
-
-      <div
-        className="finale__scene"
-        style={
-          reduced
-            ? undefined
-            : {
-                // slight overall depth from mouse on copy layer only via children
-              }
-        }
-      >
-        <FinaleDiamond />
-
-        <motion.div
-          className="finale__copy"
-          style={
-            reduced
-              ? undefined
-              : { x: mouse.x * 0.25, y: mouse.y * 0.2 }
-          }
-          initial={reduced ? false : 'hidden'}
-          whileInView={reduced ? undefined : 'visible'}
-          viewport={{ once: true, amount: 0.4 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.14, delayChildren: 0.15 } },
-          }}
-        >
-          <motion.p className="finale__label" variants={reveal}>
-            Your Journey Starts Here
-          </motion.p>
-          <motion.h2 className="finale__heading" variants={reveal}>
-            Own More Than
-            <br />
-            A Jewellery Store.
-            <br />
-            <em>Own A Legacy.</em>
-          </motion.h2>
-          <motion.p className="finale__lede" variants={reveal}>
-            Partner with EMORI and become part of India&apos;s fastest growing premium lab-grown
-            diamond brand. Own a business backed by operational excellence, proven performance and
-            long-term vision.
-          </motion.p>
-
-          <motion.ul
-            className="finale__badges"
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.1 } },
-            }}
+    <section id="invitation" className="finale finale--screen">
+      <div className="finale__scene finale__scene--conversion">
+        <div className="finale__layout">
+          <motion.div
+            className="finale__copy finale__copy--split"
+            initial={reduced ? false : 'hidden'}
+            whileInView={reduced ? undefined : 'visible'}
+            viewport={{ once: true, amount: 0.35 }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
           >
-            {badges.map((badge) => (
-              <motion.li
-                key={badge}
-                className="finale__badge"
-                variants={{
-                  hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    filter: 'blur(0px)',
-                    transition: { duration: 0.85, ease: luxuryEase },
-                  },
-                }}
-              >
-                <span className="finale__badge-check" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="none">
-                    <path
-                      d="M3.5 8.2 L6.4 11.1 L12.5 4.8"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                {badge}
-              </motion.li>
-            ))}
-          </motion.ul>
+            <motion.span className="finale__pill" variants={reveal}>
+              Contact
+            </motion.span>
+            <motion.h2 className="finale__heading" variants={reveal}>
+              Get in Touch With Our Team
+            </motion.h2>
+            <motion.span className="finale__rule" variants={reveal} aria-hidden="true" />
+            <motion.p className="finale__lede" variants={reveal}>
+              The next EMORI store could be in your city. Share your details and our
+              partnerships team will guide you through the franchise opportunity.
+            </motion.p>
+            <motion.ul className="finale__trust" variants={reveal} aria-label="Trust highlights">
+              {trustHighlights.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </motion.ul>
+            <motion.div className="finale__contact-actions" variants={reveal}>
+              <a href="mailto:partnerships@emori.com" className="finale__contact-primary">
+                <MailIcon />
+                Email Our Team
+              </a>
+              <div className="finale__contact-icons">
+                <a href="mailto:partnerships@emori.com" className="finale__contact-icon" aria-label="Email">
+                  <MailIcon />
+                </a>
+                <a href="tel:+911234567890" className="finale__contact-icon" aria-label="Phone">
+                  <PhoneIcon />
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
 
           <motion.div
-            className="finale__actions"
-            variants={{
-              hidden: { opacity: 0, scale: 0.95, y: 28 },
-              visible: {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                transition: { duration: 0.95, ease: luxuryEase },
-              },
-            }}
+            className="finale__form-shell"
+            initial={reduced ? false : { opacity: 0, y: 24 }}
+            whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.85, ease: luxuryEase }}
           >
-            <button
-              type="button"
-              className="btn btn--gold-gradient finale__cta-primary"
-              onClick={openApplication}
-            >
-              <span>Request Franchise Details</span>
-              <span className="finale__cta-shine" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="btn finale__cta-secondary"
-              onClick={openApplication}
-            >
-              Schedule a Private Consultation
-            </button>
+            <div className="finale__form-card">
+              <ApplicationForm variant="inline" />
+            </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
+      <Footer />
     </section>
   )
 }

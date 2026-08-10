@@ -1,150 +1,325 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { useApplicationModal } from '../context/ApplicationModalContext'
-import { reveal } from '../lib/motion'
+import { useCallback, useEffect, useState } from 'react'
+import noidaBack from '../assets/NOIDA - Back facade.jpeg'
+import noida1 from '../assets/NOIDA 1.jpeg'
+import noidaFrontFacade from '../assets/NOIDA Front Facade.jpeg'
+import noida2 from '../assets/Noida 2.jpeg'
+import noida3 from '../assets/Noida 3.jpeg'
+import noida4 from '../assets/Noida 4.jpeg'
+import noida5 from '../assets/Noida 5.jpeg'
+import noidaFront from '../assets/Noida front.jpeg'
+import { luxuryEase, reveal } from '../lib/motion'
 
-type Slide = {
-  id: string
-  image: string
-  label: string
-  detail: string
+const dwarkaModules = import.meta.glob<string>('../assets/dwarka (*).jpeg', {
+  eager: true,
+  import: 'default',
+})
+
+const ggnModules = import.meta.glob<string>('../assets/GGN*.jpeg', {
+  eager: true,
+  import: 'default',
+})
+
+function sortDwarkaImages(paths: Record<string, string>) {
+  return Object.entries(paths)
+    .sort(([a], [b]) => {
+      const num = (path: string) => Number(path.match(/\((\d+)\)/)?.[1] ?? 0)
+      return num(a) - num(b)
+    })
+    .map(([, url]) => url)
 }
 
-const slides: Slide[] = [
-  {
-    id: '1',
-    image:
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80',
-    label: 'Diamond Rings',
-    detail: 'Lab-grown brilliance',
-  },
-  {
-    id: '2',
-    image:
-      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80',
-    label: 'Statement Necklaces',
-    detail: 'Boutique vitrine',
-  },
-  {
-    id: '3',
-    image:
-      'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=900&q=80',
-    label: 'Gold Craft',
-    detail: '14K & 18K finishes',
-  },
-  {
-    id: '4',
-    image:
-      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=80',
-    label: 'Bridal Edit',
-    detail: 'Engagement collection',
-  },
-  {
-    id: '5',
-    image:
-      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=80',
-    label: 'Salon Interior',
-    detail: 'AIPL Joy Street',
-  },
-  {
-    id: '6',
-    image:
-      'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80',
-    label: 'Client Experience',
-    detail: 'Private consultation',
-  },
-  {
-    id: '7',
-    image:
-      'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80',
-    label: 'Everyday Luxury',
-    detail: 'Wearable elegance',
-  },
-  {
-    id: '8',
-    image:
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
-    label: 'Flagship Space',
-    detail: 'Premium retail design',
-  },
+function sortGgnImages(paths: Record<string, string>) {
+  return Object.entries(paths)
+    .sort(([a], [b]) => {
+      const num = (path: string) => {
+        const match = path.match(/GGN (\d+)/)
+        return match ? Number(match[1]) : 999
+      }
+      const diff = num(a) - num(b)
+      if (diff !== 0) return diff
+      return a.localeCompare(b)
+    })
+    .map(([, url]) => url)
+}
+
+const noidaImages = [
+  noidaBack,
+  noida1,
+  noidaFrontFacade,
+  noida2,
+  noida3,
+  noida4,
+  noida5,
+  noidaFront,
 ]
 
-const loopSlides = [...slides, ...slides]
+const locations = [
+  {
+    id: 'gurugram',
+    filterLabel: 'Gurugram',
+    name: 'AIPL Joystreet',
+    city: 'Gurugram',
+    images: sortGgnImages(ggnModules),
+  },
+  {
+    id: 'noida',
+    filterLabel: 'Noida',
+    name: 'Wave One Mall',
+    city: 'Noida',
+    images: noidaImages,
+  },
+  {
+    id: 'dwarka',
+    filterLabel: 'Dwarka',
+    name: 'Dwarka Sector 11',
+    city: 'Dwarka',
+    images: sortDwarkaImages(dwarkaModules),
+  },
+] as const
+
+const AUTO_PLAY_MS = 2800
+
+const storeSpecs = [
+  { label: 'Store Size', value: '500–1,000 square feet' },
+  { label: 'Preferred Locations', value: 'Premium High Street or Popular Mall' },
+]
+
+function slideOffset(index: number, active: number, total: number) {
+  let diff = index - active
+  if (diff > total / 2) diff -= total
+  if (diff < -total / 2) diff += total
+  return diff
+}
+
+function CarouselArrow({ direction }: { direction: 'prev' | 'next' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      {direction === 'prev' ? (
+        <path
+          d="M15 6l-6 6 6 6"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <path
+          d="M9 6l6 6-6 6"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+    </svg>
+  )
+}
 
 export function StoreExperience() {
   const reduced = useReducedMotion()
-  const { openApplication } = useApplicationModal()
+  const [locationIndex, setLocationIndex] = useState(0)
+  const [slideIndex, setSlideIndex] = useState(0)
+
+  const current = locations[locationIndex]
+
+  useEffect(() => {
+    setSlideIndex(0)
+  }, [locationIndex])
+
+  useEffect(() => {
+    if (reduced) return
+
+    const timer = window.setInterval(() => {
+      setSlideIndex((index) => (index + 1) % current.images.length)
+    }, AUTO_PLAY_MS)
+
+    return () => window.clearInterval(timer)
+  }, [locationIndex, current.images.length, reduced])
+
+  const goPrev = useCallback(() => {
+    setSlideIndex((index) => (index - 1 + current.images.length) % current.images.length)
+  }, [current.images.length])
+
+  const goNext = useCallback(() => {
+    setSlideIndex((index) => (index + 1) % current.images.length)
+  }, [current.images.length])
 
   return (
     <section id="store" className="store">
-      <div className="store__atmosphere" aria-hidden="true">
-        <span className="store__radial store__radial--a" />
-        <span className="store__radial store__radial--b" />
-        <span className="store__grain" />
-      </div>
-
       <div className="store__scene">
-        <motion.div
+        <motion.header
           className="store__intro"
           initial={reduced ? false : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
-          viewport={{ once: true, amount: 0.5 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.12 } },
-          }}
+          viewport={{ once: true, amount: 0.4 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.p className="store__label" variants={reveal}>
-            Store Experience
-          </motion.p>
+          <motion.div className="store__pill" variants={reveal}>
+            <span className="store__pill-mark" aria-hidden="true" />
+            Our Stores
+          </motion.div>
           <motion.h2 className="store__heading" variants={reveal}>
-            Step Inside
-            <br />
-            <em>The EMORI Experience.</em>
+            A Growing Retail Presence Across NCR
           </motion.h2>
-          <motion.p className="store__lede" variants={reveal}>
-            Every EMORI boutique is designed to deliver a premium jewellery experience that
-            reflects elegance, trust and modern luxury.
-          </motion.p>
-        </motion.div>
+          <p className="store__subheading">
+            Explore EMORI&apos;s existing stores and the retail experience already established
+            across key NCR locations.
+          </p>
+        </motion.header>
 
-        <div className="store__marquee" aria-label="EMORI store and jewellery gallery">
-          <div
-            className={`store__marquee-track${reduced ? ' store__marquee-track--static' : ''}`}
-          >
-            {loopSlides.map((slide, index) => (
-              <article
-                key={`${slide.id}-${index}`}
-                className="store__card"
-                aria-hidden={index >= slides.length}
-              >
+        <motion.div
+          className="store__filter-bar"
+          initial={reduced ? false : { opacity: 0, y: 10 }}
+          whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: luxuryEase }}
+        >
+          <div className="store__filters" role="tablist" aria-label="Store locations">
+            {locations.map((location, index) => {
+              const isActive = locationIndex === index
+              return (
                 <div
-                  className="store__card-media"
-                  style={{ backgroundImage: `url(${slide.image})` }}
-                />
-                <div className="store__card-meta">
-                  <p className="store__card-label">{slide.label}</p>
-                  <p className="store__card-detail">{slide.detail}</p>
+                  key={location.id}
+                  className={`store__filter-group${isActive ? ' is-active' : ''}`}
+                >
+                  <button
+                    type="button"
+                    role="tab"
+                    className={`store__filter${isActive ? ' is-active is-combined' : ''}`}
+                    aria-selected={isActive}
+                    onClick={() => setLocationIndex(index)}
+                  >
+                    {isActive ? (
+                      <>
+                        <span className="store__filter-part store__filter-part--city">
+                          {location.filterLabel}
+                        </span>
+                        <span className="store__filter-sep store__filter-sep--arrow" aria-hidden="true">
+                          {'\u00b7-->'}
+                        </span>
+                        <span className="store__filter-part store__filter-part--store">
+                          {location.name}
+                        </span>
+                        <span className="store__filter-sep" aria-hidden="true">
+                          ·
+                        </span>
+                        <span
+                          className="store__filter-part store__filter-part--photo"
+                          aria-live="polite"
+                        >
+                          Photo {slideIndex + 1} of {location.images.length}
+                        </span>
+                      </>
+                    ) : (
+                      location.filterLabel
+                    )}
+                  </button>
                 </div>
-              </article>
+              )
+            })}
+
+            <span className="store__filter-bar-divider" aria-hidden="true" />
+
+            {storeSpecs.map((spec) => (
+              <span key={spec.label} className="store__filter-spec">
+                <span className="store__filter-spec-kicker">{spec.label}</span>
+                <span className="store__filter-spec-text">{spec.value}</span>
+              </span>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="store__footer">
-          <p className="store__shimmer">
-            The next flagship EMORI boutique could be in your city.
-          </p>
+        <div className="store__showcase-wrap">
+        <motion.div
+          key={current.id}
+          className="store__showcase"
+          initial={reduced ? false : { opacity: 0, y: 14 }}
+          animate={reduced ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: luxuryEase }}
+        >
           <button
             type="button"
-            className="btn btn--gold-gradient store__cta"
-            onClick={openApplication}
+            className="store__showcase-nav store__showcase-nav--prev"
+            onClick={goPrev}
+            aria-label="Previous store photo"
           >
-            Request Franchise Details
+            <CarouselArrow direction="prev" />
           </button>
-        </div>
-      </div>
 
-      <div className="store__bridge" aria-hidden="true" />
+          <div className="store__showcase-stage" aria-live="polite">
+            <ul className="store__showcase-track">
+              {current.images.map((image, index) => {
+                const offset = slideOffset(index, slideIndex, current.images.length)
+                const distance = Math.abs(offset)
+                const isActive = offset === 0
+                const isVisible = distance <= 2
+
+                return (
+                  <motion.li
+                    key={`${current.id}-${index}`}
+                    className={`store__showcase-slide${isActive ? ' is-active' : ''}`}
+                    aria-hidden={!isActive}
+                    initial={false}
+                    animate={
+                      reduced
+                        ? {
+                            x: 0,
+                            scale: isActive ? 1 : 0,
+                            opacity: isActive ? 1 : 0,
+                            filter: 'blur(0px)',
+                            zIndex: isActive ? 5 : 1,
+                          }
+                        : {
+                            x: offset * 210,
+                            scale: 1 - Math.min(distance, 2) * 0.11,
+                            opacity: isVisible ? (isActive ? 1 : 0.72 - distance * 0.18) : 0,
+                            filter: isActive ? 'blur(0px)' : `blur(${Math.min(distance, 2) * 2.5}px)`,
+                            zIndex: 5 - distance,
+                          }
+                    }
+                    transition={{ duration: 0.85, ease: luxuryEase }}
+                  >
+                    <figure className="store__showcase-card">
+                      <img
+                        src={image}
+                        alt={
+                          isActive
+                            ? `EMORI ${current.filterLabel} store — ${current.name}`
+                            : ''
+                        }
+                        loading={distance <= 1 ? 'eager' : 'lazy'}
+                        decoding="async"
+                        draggable={false}
+                      />
+                    </figure>
+                  </motion.li>
+                )
+              })}
+            </ul>
+          </div>
+
+          <button
+            type="button"
+            className="store__showcase-nav store__showcase-nav--next"
+            onClick={goNext}
+            aria-label="Next store photo"
+          >
+            <CarouselArrow direction="next" />
+          </button>
+        </motion.div>
+        </div>
+
+        <motion.p
+          className="store__shimmer store__shimmer--solo"
+          initial={reduced ? false : { opacity: 0, y: 12 }}
+          whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: luxuryEase }}
+        >
+          The next EMORI store could be in your city.
+        </motion.p>
+      </div>
     </section>
   )
 }

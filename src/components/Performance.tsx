@@ -3,77 +3,17 @@ import { CountUp } from './ui/CountUp'
 import { luxuryEase, reveal } from '../lib/motion'
 
 const metrics = [
-  {
-    id: '01',
-    value: 8.1,
-    decimals: 1,
-    prefix: '₹',
-    suffix: ' Cr+',
-    label: 'Offline Revenue',
-    detail: 'Strong performance from physical retail stores.',
-  },
-  {
-    id: '02',
-    value: 20,
-    decimals: 0,
-    suffix: '%',
-    label: 'Store-Level EBITDA',
-    detail: 'Healthy store profitability.',
-  },
-  {
-    id: '03',
-    value: 24,
-    decimals: 0,
-    suffix: ' Months',
-    label: 'Store Payback',
-    detail: 'Designed for faster capital recovery.',
-  },
-  {
-    id: '04',
-    value: 14,
-    decimals: 0,
-    suffix: '%',
-    label: 'Repeat Customers',
-    detail: 'Growing customer loyalty.',
-  },
-  {
-    id: '05',
-    value: 5.8,
-    decimals: 1,
-    prefix: '₹',
-    suffix: ' Cr+',
-    label: 'Online Revenue',
-    detail: 'Strong omnichannel demand.',
-  },
-  {
-    id: '06',
-    value: 15,
-    decimals: 0,
-    suffix: 'K+',
-    label: 'Community',
-    detail: 'Growing premium audience.',
-  },
+  { value: 8.1, decimals: 1, prefix: '₹', suffix: ' Cr', label: 'Offline Revenue' },
+  { value: 5.8, decimals: 1, prefix: '₹', suffix: ' Cr', label: 'Online Revenue' },
+  { value: 20, decimals: 0, suffix: '%', label: 'Store-Level EBITDA' },
+  { value: 24, decimals: 0, suffix: ' Months', label: 'Store Payback' },
+  { value: 14, decimals: 0, suffix: '%', label: '12-Month Repeat Rate' },
+  { value: 15, decimals: 0, suffix: 'K+', label: 'Social Following' },
 ]
 
 const panelReveal = {
-  hidden: {
-    opacity: 0,
-    y: 28,
-    filter: 'blur(8px)',
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.75, ease: luxuryEase },
-  },
-}
-
-const panelStagger = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: luxuryEase } },
 }
 
 export function Performance() {
@@ -82,49 +22,35 @@ export function Performance() {
   return (
     <section id="performance" className="performance">
       <div className="performance__rail">
-        <motion.div
+        <motion.header
           className="performance__copy"
           initial={reduced ? false : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
           viewport={{ once: true, amount: 0.35 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.12 } },
-          }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.p className="performance__label" variants={reveal}>
+          <motion.div className="performance__pill" variants={reveal}>
+            <span className="performance__pill-mark" aria-hidden="true" />
             Proven Performance
-          </motion.p>
-          <motion.h2 className="performance__heading" variants={reveal}>
-            Built for Luxury.
-            <br />
-            Proven by Performance.
-          </motion.h2>
-          <motion.p className="performance__lede" variants={reveal}>
-            EMORI isn&apos;t an idea. It&apos;s an operating business with profitable stores, growing
-            demand and measurable performance.
-          </motion.p>
-
-          <motion.div className="performance__hero-metrics" variants={reveal}>
-            <p className="performance__hero-value">
-              ₹<CountUp value={8.1} decimals={1} /> Cr+
-            </p>
-            <p className="performance__hero-value">
-              <CountUp value={20} />%
-            </p>
           </motion.div>
-        </motion.div>
+          <motion.h2 className="performance__heading" variants={reveal}>
+            Performance That Speaks for Itself
+          </motion.h2>
+          <p className="performance__subheading">
+            A snapshot of EMORI&apos;s reported retail and digital performance.
+          </p>
+        </motion.header>
 
         <motion.div
           className="performance__panels"
-          variants={reduced ? undefined : panelStagger}
+          variants={reduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
           initial={reduced ? undefined : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
           viewport={{ once: true, amount: 0.2 }}
         >
           {metrics.map((metric) => (
             <motion.article
-              key={metric.id}
+              key={metric.label}
               className="performance__panel"
               variants={reduced ? undefined : panelReveal}
             >
@@ -137,7 +63,6 @@ export function Performance() {
                 />
               </p>
               <p className="performance__panel-label">{metric.label}</p>
-              <p className="performance__panel-detail">{metric.detail}</p>
             </motion.article>
           ))}
         </motion.div>

@@ -5,7 +5,7 @@ import { useApplicationModal } from '../context/ApplicationModalContext'
 const links = [
   { href: '#investment', label: 'Investment' },
   { href: '#faq', label: 'FAQ' },
-  { href: '#partners', label: 'Partners' },
+  { href: '#store', label: 'Partners' },
   { href: '#invitation', label: 'Begin' },
 ]
 

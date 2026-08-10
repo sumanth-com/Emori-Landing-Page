@@ -1,132 +1,111 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import type { ReactNode } from 'react'
 import { luxuryEase, reveal } from '../lib/motion'
-import {
-  IconChannel,
-  IconGem,
-  IconGold,
-  IconSeal,
-  IconShark,
-  IconStore,
-} from './trust/TrustIcons'
+import womenRings from '../assets/Women Rings.jpg'
+import earrings from '../assets/Earrings.jfif'
+import mensRings from "../assets/Men's Rings.jfif"
+import mangalsutras from '../assets/Mangalsutras.jfif'
+import pendants from '../assets/Pendants.jfif'
+import bracelets from '../assets/Bracelets.jfif'
+import necklaces from '../assets/Necklaces.jfif'
 
-const cards: {
-  title: string
-  subtitle: string
-  icon: ReactNode
-}[] = [
+const gallery = [
   {
-    title: 'Shark Tank India',
-    subtitle: 'Backed by ₹3 Crore investment',
-    icon: <IconShark />,
+    label: 'Women Rings',
+    alt: 'Premium lab-grown diamond ring for women',
+    src: womenRings,
   },
   {
-    title: 'IGI Certified',
-    subtitle: 'International Gemological Institute',
-    icon: <IconGem />,
+    label: 'Earrings',
+    alt: 'Woman wearing diamond stud earrings',
+    src: earrings,
   },
   {
-    title: 'SGL Certified',
-    subtitle: 'Premium Diamond Certification',
-    icon: <IconSeal />,
+    label: "Men's Rings",
+    alt: 'Men’s diamond band ring',
+    src: mensRings,
   },
   {
-    title: '14K & 18K Gold',
-    subtitle: 'Luxury craftsmanship',
-    icon: <IconGold />,
+    label: 'Mangalsutras',
+    alt: 'Diamond mangalsutra necklace',
+    src: mangalsutras,
   },
   {
-    title: 'Omnichannel Brand',
-    subtitle: 'Online + Offline Presence',
-    icon: <IconChannel />,
+    label: 'Pendants',
+    alt: 'Heart-shaped diamond pendant',
+    src: pendants,
   },
   {
-    title: 'Premium Stores',
-    subtitle: 'Growing retail network',
-    icon: <IconStore />,
+    label: 'Bracelets',
+    alt: 'Diamond bracelet on wrist',
+    src: bracelets,
+  },
+  {
+    label: 'Necklaces',
+    alt: 'Diamond necklace',
+    src: necklaces,
   },
 ]
 
-const cardReveal = {
-  hidden: {
-    opacity: 0,
-    y: 28,
-    filter: 'blur(8px)',
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: {
-      duration: 0.75,
-      ease: luxuryEase,
-    },
-  },
+function SharkTankBadge() {
+  return (
+    <div className="trust-proven__badge" aria-hidden="true">
+      <span className="trust-proven__badge-kicker">As Seen On</span>
+      <span className="trust-proven__badge-brand">Shark Tank India</span>
+      <span className="trust-proven__badge-season">Season 5</span>
+    </div>
+  )
 }
 
-const cardStagger = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.08,
-    },
-  },
+function GalleryCard({ item }: { item: (typeof gallery)[number] }) {
+  return (
+    <figure className="trust-proven__card">
+      <div className="trust-proven__tile">
+        <img className="trust-proven__tile-img" src={item.src} alt={item.alt} loading="lazy" />
+        <SharkTankBadge />
+      </div>
+      <figcaption className="trust-proven__tile-label">{item.label}</figcaption>
+    </figure>
+  )
 }
 
 export function TrustProven() {
   const reduced = useReducedMotion()
+  const loopSlides = [...gallery, ...gallery, ...gallery]
 
   return (
-    <section id="trust-proven" className="trust-proven">
+    <section id="trust-proven" className="trust-proven" aria-label="Trust and credibility">
       <div className="trust-proven__rail">
-        <motion.div
+        <motion.header
           className="trust-proven__intro"
           initial={reduced ? false : 'hidden'}
           whileInView={reduced ? undefined : 'visible'}
-          viewport={{ once: true, amount: 0.35 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.12 } },
-          }}
+          viewport={{ once: true, amount: 0.4 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.p className="trust-proven__label" variants={reveal}>
-            Trusted. Proven. Growing.
-          </motion.p>
-          <motion.h2 className="trust-proven__heading" variants={reveal}>
-            A Brand Built on Trust, Crafted for Growth.
+          <motion.h2 className="trust-proven__title" variants={reveal}>
+            A Brand Backed by Visionary Investors.
           </motion.h2>
-          <motion.p className="trust-proven__lede" variants={reveal}>
-            India&apos;s most trusted lab grown diamond jewellery brand, now inviting partners to
-            grow with us.
-          </motion.p>
-        </motion.div>
+          <p className="trust-proven__lede">
+            EMORI was featured on Shark Tank India and secured ₹3 crore in funding from four leading
+            investors — Anupam Mittal, Ritesh Agarwal, Namita Thapar and Amit Jain.
+          </p>
+        </motion.header>
 
         <motion.div
-          className="trust-proven__cards"
-          variants={reduced ? undefined : cardStagger}
-          initial={reduced ? undefined : 'hidden'}
-          whileInView={reduced ? undefined : 'visible'}
+          className="trust-proven__marquee"
+          initial={reduced ? false : { opacity: 0, y: 16 }}
+          whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.8, ease: luxuryEase }}
+          aria-label="EMORI jewellery categories"
         >
-          {cards.map((card) => (
-            <motion.article
-              key={card.title}
-              className="trust-card"
-              variants={reduced ? undefined : cardReveal}
-            >
-              <div className="trust-card__copy">
-                <h3 className="trust-card__title">{card.title}</h3>
-                <p className="trust-card__subtitle">{card.subtitle}</p>
-              </div>
-
-              <div className="trust-card__art" aria-hidden="true">
-                <span className="trust-card__bloom" />
-                <span className="trust-card__ring" />
-                <div className="trust-card__icon">{card.icon}</div>
-              </div>
-            </motion.article>
-          ))}
+          <div
+            className={`trust-proven__marquee-track${reduced ? ' trust-proven__marquee-track--static' : ''}`}
+          >
+            {loopSlides.map((item, index) => (
+              <GalleryCard key={`${item.label}-${index}`} item={item} />
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

@@ -1,17 +1,16 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { WhyEmori } from './components/WhyEmori'
 import { Navigation } from './components/Navigation'
 import { Hero } from './components/Hero'
 import { TrustProven } from './components/TrustProven'
-import { BrandJourney } from './components/BrandJourney'
-import { Opportunity } from './components/Opportunity'
-import { Performance } from './components/Performance'
 import { FicoModel } from './components/FicoModel'
+import { Performance } from './components/Performance'
 import { Investment } from './components/Investment'
 import { StoreExperience } from './components/StoreExperience'
-import { Testimonials } from './components/Testimonials'
 import { Faq } from './components/Faq'
 import { FinalCta } from './components/FinalCta'
-import { Footer } from './components/Footer'
 import { ApplicationModal } from './components/ApplicationModal'
+import { ThankYouPage } from './components/ThankYouPage'
 import { CursorGlow } from './components/ui/CursorGlow'
 import { ApplicationModalProvider } from './context/ApplicationModalContext'
 import { useLenis } from './hooks/useLenis'
@@ -26,26 +25,28 @@ function Experience() {
       <main>
         <Hero />
         <TrustProven />
-        <BrandJourney />
-        <Opportunity />
-        <Performance />
+        <WhyEmori />
         <FicoModel />
         <Investment />
         <StoreExperience />
-        <Testimonials />
+        <Performance />
         <Faq />
         <FinalCta />
       </main>
-      <Footer />
     </div>
   )
 }
 
 export default function App() {
   return (
-    <ApplicationModalProvider>
-      <Experience />
-      <ApplicationModal />
-    </ApplicationModalProvider>
+    <BrowserRouter>
+      <ApplicationModalProvider>
+        <Routes>
+          <Route path="/" element={<Experience />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
+        </Routes>
+        <ApplicationModal />
+      </ApplicationModalProvider>
+    </BrowserRouter>
   )
 }
