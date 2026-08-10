@@ -4,18 +4,18 @@
  * Setup:
  * 1. Create a new Google Sheet.
  * 2. Extensions → Apps Script → paste this file → Save.
- * 3. Run `setupSheet` once (authorize when prompted) — creates a **Leads** tab.
- * 4. Run `setupEmailConfig` once and paste your Resend + site values (see below).
- * 5. Deploy → New deployment → Web app
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 6. Copy the Web App URL into `.env` as VITE_GOOGLE_SCRIPT_URL
+ * 3. Run `setupSheet` once (authorize when prompted) — creates **Leads** tab.
+ * 4. Run `setupConfigSheet` once — creates **Config** tab for Resend keys.
+ * 5. Paste your Resend API key into Config → RESEND_API_KEY (no redeploy needed later).
+ * 6. Run `testLeadEmail` once to verify email delivery.
+ * 7. Deploy → Manage deployments → Edit → New version → Deploy (same URL).
  *
- * Email logo: host `public/brand/emori-logo.png` on your live site, then set SITE_URL.
- * Resend keys live in Script Properties (never in the frontend .env).
+ * Resend keys live in the **Config** sheet or Script Properties — not in the website .env.
  */
 
 var SHEET_NAME = 'Leads'
+var CONFIG_SHEET_NAME = 'Config'
+var TIMEZONE = 'Asia/Kolkata'
 
 var HEADERS = [
   'Submitted At',
@@ -28,9 +28,10 @@ var HEADERS = [
   'City',
   'Investment Budget',
   'Preferred Location',
+  'Email Status',
 ]
 
-/** Paste values from your local `.env`, then run setupEmailConfig() once. */
+/** Optional fallback if Config sheet is empty. Prefer the Config tab instead. */
 var EMAIL_SETUP = {
   RESEND_API_KEY: '',
   RESEND_FROM_EMAIL: 'EMORI Franchise <contact@ifranchise.in>',
@@ -53,15 +54,106 @@ function setupSheet() {
     sheet.appendRow(HEADERS)
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold')
     sheet.setFrozenRows(1)
+    return
+  }
+
+  var headerRow = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+  if (headerRow.indexOf('Email Status') === -1) {
+    sheet.getRange(1, headerRow.length + 1).setValue('Email Status').setFontWeight('bold')
+  }
+}
+
+function setupConfigSheet() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
+  var sheet = spreadsheet.getSheetByName(CONFIG_SHEET_NAME)
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONFIG_SHEET_NAME)
+  }
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['Key', 'Value'])
+    sheet.appendRow(['RESEND_API_KEY', ''])
+    sheet.appendRow(['RESEND_FROM_EMAIL', 'EMORI Franchise <contact@ifranchise.in>'])
+    sheet.appendRow(['LEAD_NOTIFICATION_EMAIL', 'contact@ifranchise.in'])
+    sheet.appendRow(['SITE_URL', ''])
+    sheet.getRange(1, 1, 1, 2).setFontWeight('bold')
+    sheet.setColumnWidth(1, 240)
+    sheet.setColumnWidth(2, 420)
+  }
+}
+
+function readConfigSheet() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG_SHEET_NAME)
+  if (!sheet || sheet.getLastRow() < 2) {
+    return {}
+  }
+
+  var values = sheet.getRange(2, 1, sheet.getLastRow(), 2).getValues()
+  var config = {}
+
+  values.forEach(function (row) {
+    var key = String(row[0] || '').trim()
+    var value = String(row[1] || '').trim()
+    if (!key) return
+
+    if (key === 'RESEND_API_KEY') config.apiKey = value
+    if (key === 'RESEND_FROM_EMAIL') config.from = value
+    if (key === 'LEAD_NOTIFICATION_EMAIL') config.to = value
+    if (key === 'SITE_URL') config.siteUrl = value
+  })
+
+  return config
+}
+
+function getEmailSettings() {
+  var props = PropertiesService.getScriptProperties()
+  var sheetConfig = readConfigSheet()
+
+  return {
+    apiKey: String(
+      props.getProperty('RESEND_API_KEY') ||
+        sheetConfig.apiKey ||
+        EMAIL_SETUP.RESEND_API_KEY ||
+        ''
+    ).trim(),
+    from: String(
+      props.getProperty('RESEND_FROM_EMAIL') ||
+        sheetConfig.from ||
+        EMAIL_SETUP.RESEND_FROM_EMAIL ||
+        'EMORI Franchise <contact@ifranchise.in>'
+    ).trim(),
+    to: String(
+      props.getProperty('LEAD_NOTIFICATION_EMAIL') ||
+        sheetConfig.to ||
+        EMAIL_SETUP.LEAD_NOTIFICATION_EMAIL ||
+        'contact@ifranchise.in'
+    ).trim(),
+    siteUrl: String(props.getProperty('SITE_URL') || sheetConfig.siteUrl || EMAIL_SETUP.SITE_URL || '')
+      .trim()
+      .replace(/\/$/, ''),
+  }
+}
+
+function getEmailConfigReport() {
+  var settings = getEmailSettings()
+
+  return {
+    configured: Boolean(settings.apiKey),
+    from: settings.from,
+    to: settings.to,
+    siteUrl: settings.siteUrl || null,
+    apiKeyPresent: Boolean(settings.apiKey),
+    apiKeyPreview: settings.apiKey ? settings.apiKey.slice(0, 8) + '…' : null,
+    configSheetFound: Boolean(SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG_SHEET_NAME)),
   }
 }
 
 /**
- * Run once after filling EMAIL_SETUP above (or edit Script Properties manually).
- * Project Settings → Script properties:
- *   RESEND_API_KEY, RESEND_FROM_EMAIL, LEAD_NOTIFICATION_EMAIL, SITE_URL
+ * Run once after filling EMAIL_SETUP, or use the Config sheet instead.
  */
 function setupEmailConfig() {
+  setupConfigSheet()
+
   var props = PropertiesService.getScriptProperties()
   var next = {}
 
@@ -72,12 +164,53 @@ function setupEmailConfig() {
   }
   if (EMAIL_SETUP.SITE_URL) next.SITE_URL = String(EMAIL_SETUP.SITE_URL).replace(/\/$/, '')
 
-  props.setProperties(next)
-  Logger.log('Email config saved: ' + JSON.stringify(next))
+  if (Object.keys(next).length) {
+    props.setProperties(next)
+  }
+
+  Logger.log('Email config report: ' + JSON.stringify(getEmailConfigReport()))
 }
 
-function doGet() {
-  return jsonResponse({ success: true, status: 'EMORI form endpoint ready' })
+/** Run from Apps Script editor to verify Resend is working. */
+function testLeadEmail() {
+  var result = sendLeadNotificationEmail({
+    submittedAt: formatLeadDateTime(new Date()),
+    fullName: 'Test Lead',
+    countryIso: 'IN',
+    countryCode: '91',
+    phone: '+919129130303',
+    email: 'test@example.com',
+    state: 'Delhi',
+    city: 'New Delhi',
+    budget: '₹1 Cr – ₹2 Cr',
+    location: 'Metro / Tier-1',
+  })
+
+  var message = result.ok
+    ? 'Test email sent to ' + getEmailSettings().to
+    : 'Email failed: ' + result.message
+
+  Logger.log(message)
+
+  try {
+    SpreadsheetApp.getUi().alert(message)
+  } catch (error) {
+    Logger.log('UI alert unavailable: ' + error)
+  }
+}
+
+function doGet(e) {
+  var params = (e && e.parameter) || {}
+
+  if (params.check === 'email') {
+    return jsonResponse(getEmailConfigReport())
+  }
+
+  return jsonResponse({
+    success: true,
+    status: 'EMORI form endpoint ready',
+    email: getEmailConfigReport(),
+  })
 }
 
 function doPost(e) {
@@ -86,6 +219,7 @@ function doPost(e) {
     setupSheet()
 
     var data = readPayload(e)
+    var emailResult = sendLeadNotificationEmail(data)
 
     sheet.appendRow([
       data.submittedAt,
@@ -98,68 +232,105 @@ function doPost(e) {
       data.city,
       data.budget,
       data.location,
+      emailResult.ok ? 'Sent' : emailResult.message,
     ])
 
-    try {
-      sendLeadNotificationEmail(data)
-    } catch (mailError) {
-      Logger.log('Lead email failed (row saved): ' + mailError)
-    }
-
-    return jsonResponse({ success: true, message: 'Application received' })
+    return jsonResponse({
+      success: true,
+      message: 'Application received',
+      email: emailResult,
+    })
   } catch (error) {
-    return htmlErrorResponse(String(error))
+    return jsonResponse({ success: false, error: String(error) })
   }
 }
 
 function sendLeadNotificationEmail(data) {
-  var props = PropertiesService.getScriptProperties()
-  var apiKey = props.getProperty('RESEND_API_KEY')
+  var settings = getEmailSettings()
 
-  if (!apiKey) {
-    Logger.log('RESEND_API_KEY not set — skipping lead email.')
-    return
+  if (!settings.apiKey) {
+    return {
+      ok: false,
+      message: 'Not configured — add RESEND_API_KEY to Config sheet',
+    }
   }
 
-  var from = props.getProperty('RESEND_FROM_EMAIL') || 'EMORI Franchise <contact@ifranchise.in>'
-  var to = props.getProperty('LEAD_NOTIFICATION_EMAIL') || 'contact@ifranchise.in'
-  var logoAttachment = getLogoAttachment()
-  var html = buildLeadEmailHtml(data, Boolean(logoAttachment))
   var payload = {
-    from: from,
-    to: [to],
+    from: settings.from,
+    to: [settings.to],
+    reply_to: data.email || settings.to,
     subject: 'New EMORI Franchise Lead — ' + (data.fullName || 'Unknown'),
-    html: html,
+    html: buildLeadEmailHtml(data, false),
   }
 
-  if (logoAttachment) {
-    payload.attachments = [logoAttachment]
+  var withLogo = tryBuildLogoAttachment(settings.siteUrl)
+  if (withLogo) {
+    payload.html = buildLeadEmailHtml(data, true)
+    payload.attachments = [withLogo]
   }
 
   var response = UrlFetchApp.fetch('https://api.resend.com/emails', {
     method: 'post',
     contentType: 'application/json',
     headers: {
-      Authorization: 'Bearer ' + apiKey,
+      Authorization: 'Bearer ' + settings.apiKey,
     },
     payload: JSON.stringify(payload),
     muteHttpExceptions: true,
   })
 
   var code = response.getResponseCode()
-  if (code >= 300) {
-    throw new Error('Resend API ' + code + ': ' + response.getContentText())
+  var body = response.getContentText()
+
+  if (code < 300) {
+    return { ok: true, message: 'Sent' }
+  }
+
+  if (withLogo) {
+    delete payload.attachments
+    payload.html = buildLeadEmailHtml(data, false)
+
+    var retry = UrlFetchApp.fetch('https://api.resend.com/emails', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: {
+        Authorization: 'Bearer ' + settings.apiKey,
+      },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true,
+    })
+
+    if (retry.getResponseCode() < 300) {
+      return { ok: true, message: 'Sent (no logo)' }
+    }
+
+    body = retry.getContentText()
+    code = retry.getResponseCode()
+  }
+
+  return {
+    ok: false,
+    message: 'Failed (' + code + '): ' + parseResendError(body),
   }
 }
 
-function getLogoAttachment() {
-  var props = PropertiesService.getScriptProperties()
-  var siteUrl = (props.getProperty('SITE_URL') || '').replace(/\/$/, '')
-  var logoUrl = siteUrl ? siteUrl + '/brand/emori-logo.png' : ''
+function parseResendError(body) {
+  try {
+    var json = JSON.parse(body)
+    if (json.message) return json.message
+  } catch (error) {
+    // ignore parse errors
+  }
 
-  if (!logoUrl) {
+  return body || 'Unknown Resend error'
+}
+
+function tryBuildLogoAttachment(siteUrl) {
+  if (!siteUrl) {
     return null
   }
+
+  var logoUrl = siteUrl + '/brand/emori-logo.png'
 
   try {
     var response = UrlFetchApp.fetch(logoUrl, { muteHttpExceptions: true })
@@ -247,12 +418,16 @@ function buildLeadEmailHtml(data, hasLogo) {
   )
 }
 
-function formatLeadDate(value) {
-  try {
-    return Utilities.formatDate(new Date(value), Session.getScriptTimeZone(), 'dd MMM yyyy, hh:mm a')
-  } catch (error) {
-    return String(value || '')
+function formatLeadDateTime(value) {
+  var date = value ? new Date(value) : new Date()
+  if (isNaN(date.getTime())) {
+    date = new Date()
   }
+  return Utilities.formatDate(date, TIMEZONE, 'dd/MM/yyyy hh:mm a')
+}
+
+function formatLeadDate(value) {
+  return formatLeadDateTime(value)
 }
 
 function readPayload(e) {
@@ -278,7 +453,7 @@ function readPayload(e) {
 
 function normalizePayload(raw) {
   return {
-    submittedAt: raw.submittedAt || new Date().toISOString(),
+    submittedAt: formatLeadDateTime(raw.submittedAt),
     fullName: String(raw.fullName || ''),
     countryIso: String(raw.countryIso || ''),
     countryCode: String(raw.countryCode || ''),
@@ -291,56 +466,12 @@ function normalizePayload(raw) {
   }
 }
 
-function safeRedirectUrl(url) {
-  if (!url) return ''
-
-  var trimmed = String(url).trim()
-  if (/^https?:\/\/(localhost|127\.0\.0\.1|[a-z0-9.-]+)(:\d+)?\/thank-you\/?$/i.test(trimmed)) {
-    return trimmed
-  }
-
-  return ''
-}
-
-function redirectResponse(url) {
-  if (!url) {
-    return htmlErrorResponse('Invalid redirect URL. Form saved, but could not redirect.')
-  }
-
-  var html =
-    '<!DOCTYPE html><html><head>' +
-    '<meta charset="utf-8">' +
-    '<meta http-equiv="refresh" content="0;url=' +
-    escapeHtml(url) +
-    '">' +
-    '<script>window.location.replace("' +
-    escapeJs(url) +
-    '");</script>' +
-    '</head><body><p>Application received. Redirecting…</p></body></html>'
-
-  return HtmlService.createHtmlOutput(html).setTitle('EMORI')
-}
-
-function htmlErrorResponse(message) {
-  var html =
-    '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>' +
-    '<p>Unable to submit your application.</p><p>' +
-    escapeHtml(message) +
-    '</p></body></html>'
-
-  return HtmlService.createHtmlOutput(html).setTitle('EMORI')
-}
-
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-}
-
-function escapeJs(value) {
-  return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"')
 }
 
 function jsonResponse(body) {

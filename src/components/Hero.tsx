@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import banner from '../assets/Banner.png'
-import { useApplicationModal } from '../context/ApplicationModalContext'
 import { reveal, staggerSlow } from '../lib/motion'
+import { scrollToSection, updateSectionHash } from '../lib/scrollToSection'
 
 const stats = [
   { label: 'Investment', value: '₹2.25 Cr', detail: 'Total Investment' },
@@ -13,7 +13,6 @@ const stats = [
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null)
-  const { openApplication } = useApplicationModal()
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end start'],
@@ -72,14 +71,20 @@ export function Hero() {
                 <button
                   type="button"
                   className="btn btn--gold-gradient btn--compact"
-                  onClick={() => document.getElementById('investment')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => {
+                    scrollToSection('investment')
+                    updateSectionHash('investment')
+                  }}
                 >
                   Explore Franchise Opportunity
                 </button>
                 <button
                   type="button"
                   className="btn btn--ghost-light btn--compact"
-                  onClick={openApplication}
+                  onClick={() => {
+                    scrollToSection('invitation')
+                    updateSectionHash('invitation')
+                  }}
                 >
                   Talk to Our Team
                 </button>

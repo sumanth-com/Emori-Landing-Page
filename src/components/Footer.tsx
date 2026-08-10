@@ -1,8 +1,22 @@
 import { motion } from 'framer-motion'
+import { type MouseEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { luxuryEase } from '../lib/motion'
 import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from '../data/contact'
+import { scrollToSection, updateSectionHash } from '../lib/scrollToSection'
 
 export function Footer() {
+  const navigate = useNavigate()
+
+  const goHome = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    navigate('/')
+    window.setTimeout(() => {
+      scrollToSection('top')
+      updateSectionHash('top')
+    }, 80)
+  }
+
   return (
     <motion.footer
       className="footer footer--finale"
@@ -12,7 +26,7 @@ export function Footer() {
       transition={{ duration: 0.8, ease: luxuryEase }}
     >
       <div className="footer__rail">
-        <a href="#top" className="footer__brand">
+        <a href="/#top" className="footer__brand" onClick={goHome}>
           EMORI
         </a>
         <p className="footer__tagline">Luxury lab-grown diamond jewellery</p>

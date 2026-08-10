@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Footer } from './Footer'
 import { luxuryEase, reveal } from '../lib/motion'
 import { ApplicationForm } from './ApplicationForm'
-import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from '../data/contact'
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL, CONTACT_WEBSITE_DISPLAY, CONTACT_WEBSITE_URL } from '../data/contact'
 
 const trustHighlights = [
   'Shark Tank Backed',
@@ -13,26 +13,24 @@ const trustHighlights = [
 
 function MailIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 7.5l8 5.5 8-5.5M4 7.5h16v9H4v-9z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
     </svg>
   )
 }
 
 function PhoneIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M8.5 5.5h2l1.2 3-1.8 1.2a11 11 0 005.6 5.6L16.5 14l3 1.2v2a2 2 0 01-2 2C10.5 19.2 4.8 13.5 4.8 7.5a2 2 0 012-2z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+    </svg>
+  )
+}
+
+function GlobeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
     </svg>
   )
 }
@@ -72,23 +70,23 @@ export function FinalCta() {
                 <MailIcon />
                 Email Our Team
               </a>
-              <div className="finale__contact-icons">
-                <a
-                  href={`mailto:${CONTACT_EMAIL}`}
-                  className="finale__contact-icon"
-                  aria-label={`Email ${CONTACT_EMAIL}`}
-                >
-                  <MailIcon />
-                </a>
-                <a
-                  href={`tel:${CONTACT_PHONE_TEL}`}
-                  className="finale__contact-icon"
-                  aria-label={`Phone ${CONTACT_PHONE_DISPLAY}`}
-                  title={CONTACT_PHONE_DISPLAY}
-                >
-                  <PhoneIcon />
-                </a>
-              </div>
+              <a
+                href={CONTACT_WEBSITE_URL}
+                className="finale__contact-primary finale__contact-primary--outline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <GlobeIcon />
+                {CONTACT_WEBSITE_DISPLAY}
+              </a>
+              <a
+                href={`tel:${CONTACT_PHONE_TEL}`}
+                className="finale__contact-icon"
+                aria-label={`Call ${CONTACT_PHONE_DISPLAY}`}
+                title={CONTACT_PHONE_DISPLAY}
+              >
+                <PhoneIcon />
+              </a>
             </motion.div>
           </motion.div>
 

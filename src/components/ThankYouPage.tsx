@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Navigation } from './Navigation'
 import { luxuryEase } from '../lib/motion'
 import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from '../data/contact'
 
@@ -24,7 +25,9 @@ export function ThankYouPage() {
   const reduced = useReducedMotion()
 
   return (
-    <div className="thank-you">
+    <div className="thank-you-page">
+      <Navigation variant="solid" />
+      <div className="thank-you">
       <motion.div
         className="thank-you__card"
         initial={reduced ? false : { opacity: 0, y: 28, scale: 0.96 }}
@@ -85,6 +88,7 @@ export function ThankYouPage() {
           </a>
         </motion.div>
       </motion.div>
+      </div>
     </div>
   )
 }

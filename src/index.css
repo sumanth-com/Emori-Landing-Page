@@ -473,10 +473,80 @@ img {
   padding: 0;
   white-space: nowrap;
   transition: opacity 0.5s var(--ease-luxury);
+  text-decoration: none;
 }
 
 .nav__cta:hover {
   opacity: 0.75;
+}
+
+.nav__cta--book {
+  padding: 0.62rem 1.05rem;
+  border-radius: 999px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.14);
+  transition:
+    transform 0.35s var(--ease-luxury),
+    box-shadow 0.35s var(--ease-luxury),
+    background 0.35s var(--ease-luxury);
+}
+
+.nav__cta--book:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(17, 17, 17, 0.18);
+}
+
+@media (max-width: 979px) {
+  .nav__cta--book {
+    padding: 0.52rem 0.82rem;
+    font-size: 0.52rem;
+  }
+}
+
+#top,
+#investment,
+#store,
+#faq,
+#invitation {
+  scroll-margin-top: 5.75rem;
+}
+
+.whatsapp-fab {
+  position: fixed;
+  right: clamp(1rem, 3vw, 1.5rem);
+  bottom: clamp(1rem, 3vw, 1.5rem);
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.35rem;
+  height: 3.35rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #e0c154 0%, var(--gold) 52%, #b8942d 100%);
+  color: #111111;
+  box-shadow:
+    0 10px 28px rgba(212, 175, 55, 0.38),
+    0 4px 12px rgba(17, 17, 17, 0.12);
+  transition:
+    transform 0.35s var(--ease-luxury),
+    box-shadow 0.35s var(--ease-luxury);
+}
+
+.whatsapp-fab svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.whatsapp-fab:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    0 14px 32px rgba(212, 175, 55, 0.45),
+    0 6px 16px rgba(17, 17, 17, 0.14);
 }
 
 @media (min-width: 980px) {
@@ -10259,8 +10329,9 @@ html.modal-open .experience {
 }
 
 .finale__contact-primary svg {
-  width: 1rem;
-  height: 1rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
 }
 
 .finale__contact-primary:hover {
@@ -10268,10 +10339,15 @@ html.modal-open .experience {
   box-shadow: 0 14px 28px rgba(17, 17, 17, 0.22);
 }
 
-.finale__contact-icons {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
+.finale__contact-primary--outline {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.08);
+}
+
+.finale__contact-primary--outline:hover {
+  box-shadow: 0 12px 24px rgba(17, 17, 17, 0.12);
 }
 
 .finale__contact-icon {
@@ -10288,8 +10364,8 @@ html.modal-open .experience {
 }
 
 .finale__contact-icon svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.05rem;
+  height: 1.05rem;
 }
 
 .finale__contact-icon:hover {
@@ -10625,12 +10701,22 @@ html.modal-open .experience {
 
 /* ——— Thank you page ——— */
 
-.thank-you {
+.nav--solid {
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  background-color: rgba(247, 242, 238, 0.96) !important;
+}
+
+.thank-you-page {
   min-height: 100svh;
+  background: var(--page-bg);
+}
+
+.thank-you-page .thank-you {
+  min-height: calc(100svh - 4.5rem);
   display: grid;
   place-items: center;
-  padding: clamp(5rem, 8vh, 6rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 4vh, 3rem);
-  background: var(--page-bg);
+  padding: clamp(1rem, 4vh, 2rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 4vh, 3rem);
 }
 
 .thank-you__card {

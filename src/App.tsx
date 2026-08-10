@@ -11,9 +11,11 @@ import { Faq } from './components/Faq'
 import { FinalCta } from './components/FinalCta'
 import { ApplicationModal } from './components/ApplicationModal'
 import { ThankYouPage } from './components/ThankYouPage'
+import { ScrollManager } from './components/ScrollManager'
 import { CursorGlow } from './components/ui/CursorGlow'
 import { ApplicationModalProvider } from './context/ApplicationModalContext'
 import { useLenis } from './hooks/useLenis'
+import { WhatsAppButton } from './components/WhatsAppButton'
 
 function Experience() {
   useLenis()
@@ -41,11 +43,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <ApplicationModalProvider>
+        <ScrollManager />
         <Routes>
           <Route path="/" element={<Experience />} />
           <Route path="/thank-you" element={<ThankYouPage />} />
         </Routes>
         <ApplicationModal />
+        <WhatsAppButton />
       </ApplicationModalProvider>
     </BrowserRouter>
   )
