@@ -637,16 +637,14 @@ img {
   border-radius: 999px;
   font-family: var(--font-avenir);
   font-size: 0.56rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: #111111;
-  background: rgba(255, 252, 248, 0.7);
-  border: 1px solid rgba(212, 175, 55, 0.32);
+  background: rgba(255, 255, 255, 0.94);
+  border: none;
   backdrop-filter: blur(16px);
-  box-shadow:
-    0 12px 32px rgba(17, 17, 17, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
 }
 
 .hero__badge-mark {
@@ -1443,8 +1441,9 @@ img {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #111111;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  border: none;
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
 }
 
 .why-emori__pill-mark {
@@ -1515,18 +1514,31 @@ img {
   padding: 1.15rem 1rem 1.2rem;
   border-radius: 14px;
   background: var(--surface);
-  border: 1px solid rgba(212, 175, 55, 0.14);
+  border: 1px solid rgba(212, 175, 55, 0.16);
   box-shadow: 0 6px 18px rgba(17, 17, 17, 0.04);
+  outline: none;
   transition:
     border-color 0.45s var(--ease-luxury),
     box-shadow 0.45s var(--ease-luxury),
-    transform 0.45s var(--ease-luxury);
+    transform 0.45s var(--ease-luxury),
+    background 0.45s var(--ease-luxury);
 }
 
 .why-emori__card:hover {
-  border-color: #111111;
-  box-shadow: 0 12px 28px rgba(17, 17, 17, 0.07);
-  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.42);
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
+  box-shadow:
+    0 16px 34px rgba(212, 175, 55, 0.14),
+    0 8px 22px rgba(17, 17, 17, 0.05);
+  transform: translateY(-3px);
+}
+
+.why-emori__card:focus-visible {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.16),
+    0 14px 30px rgba(212, 175, 55, 0.12);
 }
 
 .why-emori__card-num {
@@ -2849,7 +2861,10 @@ img {
 }
 
 .performance__panel:hover {
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  border-color: rgba(212, 175, 55, 0.42);
+  box-shadow:
+    0 16px 34px rgba(212, 175, 55, 0.14),
+    0 8px 22px rgba(17, 17, 17, 0.05);
   transform: translateY(-3px);
 }
 
@@ -6949,28 +6964,32 @@ html.modal-open .experience {
 
 .faq__card {
   border-radius: 14px;
-  background: linear-gradient(
-    155deg,
-    rgba(255, 255, 255, 0.82),
-    rgba(255, 255, 255, 0.42) 55%,
-    rgba(250, 246, 238, 0.55)
-  );
-  border: 1px solid rgba(17, 17, 17, 0.06);
-  box-shadow:
-    0 12px 28px rgba(17, 17, 17, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.04);
   overflow: hidden;
   transition:
-    border-color 0.55s var(--ease-luxury),
-    box-shadow 0.55s var(--ease-luxury);
+    border-color 0.45s var(--ease-luxury),
+    box-shadow 0.45s var(--ease-luxury),
+    transform 0.45s var(--ease-luxury),
+    background 0.45s var(--ease-luxury);
+}
+
+.faq__card:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
+  box-shadow:
+    0 14px 30px rgba(212, 175, 55, 0.12),
+    0 8px 20px rgba(17, 17, 17, 0.04);
+  transform: translateY(-2px);
 }
 
 .faq__card.is-open {
-  border-color: #111111;
+  border-color: rgba(212, 175, 55, 0.45);
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
   box-shadow:
-    0 16px 36px rgba(17, 17, 17, 0.06),
-    0 0 24px rgba(212, 175, 55, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    0 16px 34px rgba(212, 175, 55, 0.14),
+    0 8px 22px rgba(17, 17, 17, 0.05);
 }
 
 .faq__card-trigger {
@@ -7001,11 +7020,20 @@ html.modal-open .experience {
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 50%;
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  border: none;
   color: #111111;
   font-size: 1.15rem;
   line-height: 1;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(212, 175, 55, 0.12);
+  transition:
+    background 0.45s var(--ease-luxury),
+    color 0.45s var(--ease-luxury);
+}
+
+.faq__card:hover .faq__card-icon,
+.faq__card.is-open .faq__card-icon {
+  background: rgba(212, 175, 55, 0.22);
+  color: #111111;
 }
 
 .faq__card-panel {
@@ -7342,8 +7370,9 @@ html.modal-open .experience {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #111111;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  border: none;
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
 }
 
 .performance__pill-mark {
@@ -7397,6 +7426,21 @@ html.modal-open .experience {
   border: 1px solid rgba(212, 175, 55, 0.14) !important;
   box-shadow: 0 6px 18px rgba(17, 17, 17, 0.04) !important;
   text-align: center;
+  align-items: center !important;
+  transition:
+    border-color 0.45s var(--ease-luxury),
+    box-shadow 0.45s var(--ease-luxury),
+    transform 0.45s var(--ease-luxury),
+    background 0.45s var(--ease-luxury) !important;
+}
+
+.performance__panel:hover {
+  border-color: rgba(212, 175, 55, 0.42) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%) !important;
+  box-shadow:
+    0 16px 34px rgba(212, 175, 55, 0.14),
+    0 8px 22px rgba(17, 17, 17, 0.05) !important;
+  transform: translateY(-3px);
 }
 
 .performance__panel-detail {
@@ -7406,12 +7450,16 @@ html.modal-open .experience {
 .performance__panel-value {
   font-size: clamp(1.25rem, 2.5vw, 1.65rem) !important;
   margin: 0 0 0.35rem !important;
+  text-align: center !important;
+  width: 100%;
 }
 
 .performance__panel-label {
   font-size: 0.68rem !important;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: center !important;
+  width: 100%;
 }
 
 .performance__disclaimer {
@@ -7483,7 +7531,7 @@ html.modal-open .experience {
 }
 
 .invest__returns {
-  border-color: #111111;
+  border-color: rgba(212, 175, 55, 0.2);
   box-shadow: 0 12px 32px rgba(17, 17, 17, 0.07);
 }
 
@@ -7795,8 +7843,9 @@ html.modal-open .experience {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #111111;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  border: none;
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
 }
 
 .store__pill-mark {
@@ -7862,11 +7911,11 @@ html.modal-open .experience {
   flex: 0 0 auto;
   flex-wrap: nowrap;
   gap: 0.3rem;
-  padding: 0.45rem 0.65rem;
+  padding: 0.45rem 0.75rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(255, 252, 248, 0.95) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.38);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  background: rgba(255, 252, 248, 0.98);
+  border: none;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.1);
 }
 
 .store__filter-spec-kicker {
@@ -8839,8 +8888,9 @@ html.modal-open .experience {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #111111;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  border: none;
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
 }
 
 .invest__pill-mark {
@@ -8900,8 +8950,22 @@ html.modal-open .experience {
   padding: clamp(1rem, 2vw, 1.35rem);
   border-radius: 16px;
   background: var(--surface);
-  border: 1px solid rgba(212, 175, 55, 0.16);
+  border: 1px solid rgba(212, 175, 55, 0.14);
   box-shadow: 0 12px 36px rgba(17, 17, 17, 0.06);
+  transition:
+    border-color 0.45s var(--ease-luxury),
+    box-shadow 0.45s var(--ease-luxury),
+    transform 0.45s var(--ease-luxury),
+    background 0.45s var(--ease-luxury);
+}
+
+.invest__panel:hover {
+  border-color: rgba(212, 175, 55, 0.42);
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
+  box-shadow:
+    0 16px 34px rgba(212, 175, 55, 0.14),
+    0 8px 22px rgba(17, 17, 17, 0.05);
+  transform: translateY(-2px);
 }
 
 .invest__panel-title {
@@ -8917,10 +8981,11 @@ html.modal-open .experience {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: 12px;
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  background: rgba(212, 175, 55, 0.08);
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: rgba(212, 175, 55, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .invest__mg-box .invest__highlight-icon {
@@ -8959,7 +9024,7 @@ html.modal-open .experience {
   font-family: var(--font-brand);
   font-size: clamp(2rem, 4.2vw, 2.65rem);
   font-weight: 700;
-  color: #111111;
+  color: #ffffff;
   line-height: 1;
   white-space: nowrap;
 }
@@ -8995,14 +9060,23 @@ html.modal-open .experience {
 
 .invest__panel-note--dark {
   color: #ffffff;
-  border-top-color: #ffffff;
+  border-top-color: rgba(255, 255, 255, 0.14);
 }
 
 .invest__panel--dark {
   background: #141414;
-  border-color: #111111;
+  border-color: rgba(212, 175, 55, 0.2);
   color: #fff;
   box-shadow: 0 16px 40px rgba(17, 17, 17, 0.18);
+}
+
+.invest__panel--dark:hover {
+  border-color: rgba(212, 175, 55, 0.48);
+  background: linear-gradient(180deg, #171717 0%, #12110e 100%);
+  box-shadow:
+    0 18px 38px rgba(212, 175, 55, 0.14),
+    0 12px 28px rgba(0, 0, 0, 0.28);
+  transform: translateY(-2px);
 }
 
 .invest__panel-title {
@@ -9016,7 +9090,7 @@ html.modal-open .experience {
 }
 
 .invest__panel-title--light {
-  color: #111111;
+  color: #ffffff;
 }
 
 .invest__panel-hero {
@@ -9104,12 +9178,12 @@ html.modal-open .experience {
 
 .invest__table--dark td {
   color: #ffffff;
-  border-bottom-color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.14);
 }
 
 .invest__table--dark td:last-child {
-  color: #111111;
-  font-weight: 600;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .invest__highlights {
@@ -9304,8 +9378,9 @@ html.modal-open .experience {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #111111;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  border: none;
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
 }
 
 .fico__pill-mark {
@@ -9345,18 +9420,39 @@ html.modal-open .experience {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0;
-  padding: 0 0.35rem;
-  border: none;
-  background: transparent;
-  text-align: left;
+  padding: 1.1rem 0.85rem 1.15rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.5);
+  text-align: center;
   color: inherit;
   cursor: default;
   opacity: 1;
   filter: none;
   transform: none;
-  transition: none;
+  outline: none;
+  transition:
+    border-color 0.45s var(--ease-luxury),
+    box-shadow 0.45s var(--ease-luxury),
+    transform 0.45s var(--ease-luxury),
+    background 0.45s var(--ease-luxury);
+}
+
+.fico__step:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 253, 248, 0.98) 100%);
+  box-shadow:
+    0 14px 30px rgba(212, 175, 55, 0.12),
+    0 8px 20px rgba(17, 17, 17, 0.04);
+  transform: translateY(-2px);
+}
+
+.fico__step:focus-visible {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.48);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.14);
 }
 
 .fico__icon-3d,
@@ -9453,16 +9549,19 @@ html.modal-open .experience {
 
 .fico__step-num {
   display: block;
+  width: 100%;
   margin-bottom: 0.35rem;
   font-family: var(--font-brand);
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   color: #111111;
+  text-align: center;
 }
 
 .fico__step-title {
   margin: 0;
+  width: 100%;
   font-family: var(--font-brand);
   font-size: clamp(0.72rem, 1.15vw, 0.88rem);
   font-weight: 700;
@@ -9470,6 +9569,7 @@ html.modal-open .experience {
   text-transform: uppercase;
   line-height: 1.25;
   color: #111111;
+  text-align: center;
   white-space: nowrap;
 }
 
@@ -9481,11 +9581,13 @@ html.modal-open .experience {
 }
 
 .fico__step-text {
-  margin: 0.45rem 0 0;
+  margin: 0.45rem auto 0;
+  max-width: 16rem;
   font-size: clamp(0.78rem, 1.2vw, 0.86rem);
   font-weight: 400;
   line-height: 1.6;
   color: #111111;
+  text-align: center;
 }
 
 .fico__step-connector {
@@ -9508,7 +9610,11 @@ html.modal-open .experience {
   }
 
   .fico__step {
-    padding: 0;
+    padding: 1rem 0.85rem;
+  }
+
+  .fico__step-text {
+    max-width: 100%;
   }
 
   .fico__step-arrow {
@@ -9613,19 +9719,20 @@ html.modal-open .experience {
   gap: 0.6rem;
   font-size: 0.54rem;
   letter-spacing: 0.18em;
+  font-weight: 600;
   color: #111111;
-  background: rgba(255, 255, 255, 0.88);
-  border-color: #111111;
-  box-shadow: 0 6px 18px rgba(17, 17, 17, 0.04);
+  background: rgba(255, 255, 255, 0.96);
+  border: none;
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.06);
 }
 
 .hero__heading {
   font-family: var(--font-brand);
   font-size: clamp(1.85rem, 3.6vw, 2.85rem);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.18;
   letter-spacing: -0.02em;
-  color: #111111;
+  color: #000000;
   text-wrap: balance;
   text-align: center;
 }
@@ -10902,5 +11009,19 @@ html.modal-open .experience {
 
 .thank-you-page {
   color: #111111;
+}
+
+.invest__panel--dark :where(p, li, span, label, small, td, th, h3),
+.invest__panel--dark .invest__panel-title,
+.invest__panel--dark .invest__mg-label,
+.invest__panel--dark .invest__mg-value,
+.invest__panel--dark .invest__mg-period,
+.invest__panel--dark .invest__returns-divider,
+.invest__panel--dark .invest__panel-note {
+  color: #ffffff;
+}
+
+.invest__panel--dark .invest__highlight-icon {
+  color: #ffffff;
 }
 
