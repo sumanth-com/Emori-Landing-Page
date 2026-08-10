@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Footer } from './Footer'
 import { luxuryEase, reveal } from '../lib/motion'
 import { ApplicationForm } from './ApplicationForm'
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from '../data/contact'
 
 const trustHighlights = [
   'Shark Tank Backed',
@@ -67,15 +68,24 @@ export function FinalCta() {
               ))}
             </motion.ul>
             <motion.div className="finale__contact-actions" variants={reveal}>
-              <a href="mailto:partnerships@emori.com" className="finale__contact-primary">
+              <a href={`mailto:${CONTACT_EMAIL}`} className="finale__contact-primary">
                 <MailIcon />
                 Email Our Team
               </a>
               <div className="finale__contact-icons">
-                <a href="mailto:partnerships@emori.com" className="finale__contact-icon" aria-label="Email">
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="finale__contact-icon"
+                  aria-label={`Email ${CONTACT_EMAIL}`}
+                >
                   <MailIcon />
                 </a>
-                <a href="tel:+911234567890" className="finale__contact-icon" aria-label="Phone">
+                <a
+                  href={`tel:${CONTACT_PHONE_TEL}`}
+                  className="finale__contact-icon"
+                  aria-label={`Phone ${CONTACT_PHONE_DISPLAY}`}
+                  title={CONTACT_PHONE_DISPLAY}
+                >
                   <PhoneIcon />
                 </a>
               </div>

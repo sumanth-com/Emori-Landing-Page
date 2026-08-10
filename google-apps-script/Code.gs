@@ -4,7 +4,7 @@
  * Setup:
  * 1. Create a new Google Sheet.
  * 2. Extensions → Apps Script → paste this file → Save.
- * 3. Run `setupSheet` once (authorize when prompted).
+ * 3. Run `setupSheet` once (authorize when prompted) — creates a **Leads** tab.
  * 4. Run `setupEmailConfig` once and paste your Resend + site values (see below).
  * 5. Deploy → New deployment → Web app
  *    - Execute as: Me
@@ -14,6 +14,8 @@
  * Email logo: host `public/brand/emori-logo.png` on your live site, then set SITE_URL.
  * Resend keys live in Script Properties (never in the frontend .env).
  */
+
+var SHEET_NAME = 'Leads'
 
 var HEADERS = [
   'Submitted At',
@@ -26,7 +28,6 @@ var HEADERS = [
   'City',
   'Investment Budget',
   'Preferred Location',
-  'Consent',
 ]
 
 /** Paste values from your local `.env`, then run setupEmailConfig() once. */
@@ -37,8 +38,17 @@ var EMAIL_SETUP = {
   SITE_URL: '',
 }
 
+function getLeadsSheet() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
+  var sheet = spreadsheet.getSheetByName(SHEET_NAME)
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(SHEET_NAME)
+  }
+  return sheet
+}
+
 function setupSheet() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
+  var sheet = getLeadsSheet()
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS)
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold')
@@ -72,7 +82,7 @@ function doGet() {
 
 function doPost(e) {
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
+    var sheet = getLeadsSheet()
     setupSheet()
 
     var data = readPayload(e)
@@ -88,7 +98,6 @@ function doPost(e) {
       data.city,
       data.budget,
       data.location,
-      data.consent,
     ])
 
     try {
@@ -97,7 +106,7 @@ function doPost(e) {
       Logger.log('Lead email failed (row saved): ' + mailError)
     }
 
-    return redirectResponse(safeRedirectUrl(data.redirectUrl))
+    return jsonResponse({ success: true, message: 'Application received' })
   } catch (error) {
     return htmlErrorResponse(String(error))
   }
@@ -186,7 +195,6 @@ function buildLeadEmailHtml(data, hasLogo) {
     ['Investment Budget', data.budget],
     ['Preferred Location', data.location],
     ['Country', data.countryIso + (data.countryCode ? ' (+' + data.countryCode + ')' : '')],
-    ['Consent', data.consent],
     ['Submitted', submitted],
   ]
 
@@ -233,7 +241,7 @@ function buildLeadEmailHtml(data, hasLogo) {
     '</td></tr></table>' +
     '</td></tr>' +
     '<tr><td style="padding:18px 32px 24px;border-top:1px solid #ece7e2;background:#faf8f6;">' +
-    '<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#8a847d;">This notification was sent automatically from the EMORI franchise website. The lead was also saved to your Google Sheet.</p>' +
+    '<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#8a847d;">This notification was sent automatically from the EMORI franchise website. The lead was also saved to the Leads sheet.</p>' +
     '</td></tr>' +
     '</table></td></tr></table></body></html>'
   )
@@ -265,8 +273,6 @@ function readPayload(e) {
     city: p.applicant_city,
     budget: p.applicant_budget,
     location: p.applicant_location,
-    consent: p.consent,
-    redirectUrl: p.redirectUrl,
   })
 }
 
@@ -282,8 +288,6 @@ function normalizePayload(raw) {
     city: String(raw.city || ''),
     budget: String(raw.budget || ''),
     location: String(raw.location || ''),
-    consent: raw.consent === true || raw.consent === 'Yes' || raw.consent === 'on' ? 'Yes' : 'No',
-    redirectUrl: String(raw.redirectUrl || ''),
   }
 }
 

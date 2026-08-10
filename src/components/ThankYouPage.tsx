@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { luxuryEase } from '../lib/motion'
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from '../data/contact'
 
 function CheckIcon() {
   return (
@@ -76,8 +77,11 @@ export function ThankYouPage() {
           <Link to="/" className="thank-you__cta">
             Back to EMORI
           </Link>
-          <a href="mailto:partnerships@emori.com" className="thank-you__link">
-            partnerships@emori.com
+          <a href={`mailto:${CONTACT_EMAIL}`} className="thank-you__link">
+            {CONTACT_EMAIL}
+          </a>
+          <a href={`tel:${CONTACT_PHONE_TEL}`} className="thank-you__link">
+            {CONTACT_PHONE_DISPLAY}
           </a>
         </motion.div>
       </motion.div>

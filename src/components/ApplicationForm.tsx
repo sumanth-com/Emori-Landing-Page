@@ -16,8 +16,9 @@ import {
   INDIAN_STATES,
 } from '../data/indiaLocations'
 import { fieldReveal } from '../lib/formMotion'
-import { getGoogleScriptUrl, getThankYouRedirectUrl } from '../lib/formSubmit'
+import { getGoogleScriptUrl, submitApplication } from '../lib/formSubmit'
 import { PhoneField, usePhoneFieldState } from './PhoneField'
+import { useNavigate } from 'react-router-dom'
 
 const trust = [
   'Shark Tank Backed',
@@ -59,6 +60,7 @@ export function ApplicationForm({
   const generatedId = useId()
   const formId = formIdProp ?? generatedId
   const scriptUrl = getGoogleScriptUrl()
+  const navigate = useNavigate()
   const [stateValue, setStateValue] = useState('')
   const [cityValue, setCityValue] = useState('')
   const [openMenu, setOpenMenu] = useState<string | null>(null)
@@ -72,11 +74,11 @@ export function ApplicationForm({
     setCityValue('')
   }
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     setSubmitError(null)
 
     if (!scriptUrl) {
-      e.preventDefault()
       setSubmitError(
         'Form is not connected yet. Set VITE_GOOGLE_SCRIPT_URL in .env or redeploy after updating .env.production.',
       )
@@ -84,7 +86,6 @@ export function ApplicationForm({
     }
 
     if (!phoneField.validate()) {
-      e.preventDefault()
       return
     }
 
@@ -99,12 +100,19 @@ export function ApplicationForm({
       !String(data.get('applicant_budget') ?? '').trim() ||
       !String(data.get('applicant_location') ?? '').trim()
     ) {
-      e.preventDefault()
       setSubmitError('Please complete all required fields.')
       return
     }
 
     setSubmitting(true)
+
+    try {
+      await submitApplication(form)
+      navigate('/thank-you')
+    } catch {
+      setSubmitError('Unable to submit right now. Please try again.')
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -136,8 +144,6 @@ export function ApplicationForm({
 
       <motion.form
         className="app-form__body"
-        action={scriptUrl || undefined}
-        method="POST"
         onSubmit={onSubmit}
         autoComplete="off"
         autoCorrect="off"
@@ -150,8 +156,6 @@ export function ApplicationForm({
           visible: { transition: { staggerChildren: 0.03 } },
         }}
       >
-        <input type="hidden" name="redirectUrl" value={getThankYouRedirectUrl()} />
-        <input type="hidden" name="consent" value="on" />
         <input
           type="text"
           name="fake-address"
