@@ -28,6 +28,8 @@ var HEADERS = [
   'City',
   'Investment Budget',
   'Preferred Location',
+  'Source',
+  'UTM Parameters',
   'Email Status',
 ]
 
@@ -57,10 +59,25 @@ function setupSheet() {
     return
   }
 
-  var headerRow = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
-  if (headerRow.indexOf('Email Status') === -1) {
-    sheet.getRange(1, headerRow.length + 1).setValue('Email Status').setFontWeight('bold')
-  }
+  ensureLeadHeaders(sheet)
+}
+
+function ensureLeadHeaders(sheet) {
+  var lastColumn = Math.max(sheet.getLastColumn(), 1)
+  var headerRow = sheet.getRange(1, 1, 1, lastColumn).getValues()[0]
+  var headerMap = {}
+
+  headerRow.forEach(function (header, index) {
+    headerMap[String(header || '').trim()] = index + 1
+  })
+
+  HEADERS.forEach(function (header) {
+    if (!headerMap[header]) {
+      var nextColumn = sheet.getLastColumn() + 1
+      sheet.getRange(1, nextColumn).setValue(header).setFontWeight('bold')
+      headerMap[header] = nextColumn
+    }
+  })
 }
 
 function setupConfigSheet() {
@@ -234,6 +251,8 @@ function doPost(e) {
       data.city,
       data.budget,
       data.location,
+      data.source,
+      data.utmParameters,
       emailResult.ok ? 'Sent' : emailResult.skipped ? '' : emailResult.message,
     ])
 
@@ -396,6 +415,8 @@ function buildLeadEmailHtml(data, hasLogo) {
     ['City / District', data.city],
     ['Investment Budget', data.budget],
     ['Preferred Location', data.location],
+    ['Source', data.source],
+    ['UTM Parameters', data.utmParameters],
     ['Country', data.countryIso + (data.countryCode ? ' (+' + data.countryCode + ')' : '')],
     ['Submitted', submitted],
   ]
@@ -479,6 +500,8 @@ function readPayload(e) {
     city: p.applicant_city,
     budget: p.applicant_budget,
     location: p.applicant_location,
+    source: p.applicant_source,
+    utmParameters: p.applicant_utm_parameters,
   })
 }
 
@@ -494,6 +517,8 @@ function normalizePayload(raw) {
     city: String(raw.city || ''),
     budget: String(raw.budget || ''),
     location: String(raw.location || ''),
+    source: String(raw.source || ''),
+    utmParameters: String(raw.utmParameters || ''),
   }
 }
 

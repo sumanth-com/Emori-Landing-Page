@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { captureMarketingAttribution } from '../lib/marketingAttribution'
 import { pathToSectionId, scrollToSection } from '../lib/scrollToSection'
 
 const PAGE_TITLES: Record<string, string> = {
@@ -12,7 +13,12 @@ const PAGE_TITLES: Record<string, string> = {
 const TOP_ONLY_PATHS = new Set(['/thank-you', '/privacy-policy', '/terms-and-conditions'])
 
 export function ScrollManager() {
-  const { pathname } = useLocation()
+  const location = useLocation()
+  const { pathname } = location
+
+  useEffect(() => {
+    captureMarketingAttribution(location.search)
+  }, [location.search])
 
   useEffect(() => {
     document.title = PAGE_TITLES[pathname] ?? 'EMORI — Franchise Partnership'

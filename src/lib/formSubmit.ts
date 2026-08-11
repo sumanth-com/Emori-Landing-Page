@@ -1,4 +1,6 @@
 /** Google Apps Script Web App URL (`.env`, `.env.production`, or hosting env vars) */
+import { getMarketingAttributionFields } from './marketingAttribution'
+
 export function getGoogleScriptUrl() {
   const url = import.meta.env.VITE_GOOGLE_SCRIPT_URL as string | undefined
   return url?.trim() || ''
@@ -30,6 +32,10 @@ export async function submitApplication(form: HTMLFormElement): Promise<void> {
     if (key === 'redirect_url' || key === 'fake-address') return
     params.append(key, String(value))
   })
+
+  const attribution = getMarketingAttributionFields()
+  params.set('applicant_source', attribution.source)
+  params.set('applicant_utm_parameters', attribution.utmParameters)
 
   await fetch(scriptUrl, {
     method: 'POST',
