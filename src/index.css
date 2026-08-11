@@ -1127,7 +1127,7 @@ body.nav-menu-open .whatsapp-fab {
   }
 
   .hero__layout {
-    padding-top: 4.5rem;
+    padding-top: 4rem;
     padding-bottom: 1.5rem;
   }
 
@@ -1205,7 +1205,7 @@ body.nav-menu-open .whatsapp-fab {
   .hero__layout {
     justify-content: flex-start;
     align-items: center;
-    padding-top: clamp(3.85rem, 7vh, 4.75rem);
+    padding-top: clamp(3.25rem, 6vh, 4.1rem);
     padding-bottom: 1.5rem;
   }
 
@@ -1279,7 +1279,7 @@ body.nav-menu-open .whatsapp-fab {
     flex: 1 1 auto;
     width: min(100%, calc(100% - 1.5rem));
     margin-inline: auto;
-    padding-top: 1rem;
+    padding-top: 0.5rem;
     padding-bottom: 0.2rem;
     justify-content: flex-start;
     align-items: center;
@@ -1401,7 +1401,7 @@ body.nav-menu-open .whatsapp-fab {
   .hero__layout {
     justify-content: flex-start;
     width: min(100%, calc(100% - 1.25rem));
-    padding-top: 0.9rem;
+    padding-top: 0.45rem;
     padding-bottom: 0.2rem;
   }
 
@@ -10915,7 +10915,7 @@ html.modal-open .experience {
 
 .hero__layout {
   width: min(1240px, calc(100% - 3rem));
-  padding: clamp(5.5rem, 11vh, 6.75rem) 0 clamp(4.5rem, 9vh, 5.5rem);
+  padding: clamp(4.75rem, 9vh, 6rem) 0 clamp(4.5rem, 9vh, 5.5rem);
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
@@ -13585,7 +13585,7 @@ html.modal-open .experience {
 
 @media (max-width: 767px) {
   .hero__layout {
-    padding-top: 0.95rem;
+    padding-top: 0.5rem;
     padding-bottom: 0.2rem;
     justify-content: flex-start;
   }
@@ -13755,7 +13755,7 @@ html.modal-open .experience {
   }
 
   .hero__layout {
-    padding-top: 0.85rem;
+    padding-top: 0.45rem;
     padding-bottom: 0.2rem;
     justify-content: flex-start;
   }
