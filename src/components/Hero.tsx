@@ -1,10 +1,10 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRef, type MouseEvent } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import banner from '../assets/Banner.png'
 import mobileHero from '../assets/MobileHero.png'
 import { reveal, staggerSlow } from '../lib/motion'
-import { sectionPath } from '../lib/scrollToSection'
+import { scrollToSection, sectionPath } from '../lib/scrollToSection'
 
 const stats = [
   { label: 'Investment', value: '2.3 Crores', detail: 'Total Investment' },
@@ -16,6 +16,19 @@ const stats = [
 export function Hero() {
   const ref = useRef<HTMLElement>(null)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const goToSection = (event: MouseEvent<HTMLButtonElement>, sectionId: string) => {
+    event.preventDefault()
+    const path = sectionPath(sectionId)
+
+    if (location.pathname === path) {
+      scrollToSection(sectionId)
+      return
+    }
+
+    navigate(path)
+  }
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end start'],
@@ -77,7 +90,7 @@ export function Hero() {
                 <button
                   type="button"
                   className="btn btn--gold-gradient"
-                  onClick={() => navigate(sectionPath('investment'))}
+                  onClick={(event) => goToSection(event, 'investment')}
                 >
                   <span className="hero__cta-full">Explore Franchise Opportunity</span>
                   <span className="hero__cta-short">Explore Franchise</span>
@@ -85,7 +98,7 @@ export function Hero() {
                 <button
                   type="button"
                   className="btn btn--ghost-light"
-                  onClick={() => navigate(sectionPath('contact'))}
+                  onClick={(event) => goToSection(event, 'contact')}
                 >
                   <span className="hero__cta-full">Talk to Our Team</span>
                   <span className="hero__cta-short">Talk to Team</span>

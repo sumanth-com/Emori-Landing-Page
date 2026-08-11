@@ -12713,6 +12713,21 @@ html.modal-open .experience {
     scroll-margin-top: 3.85rem;
   }
 
+  .trust-proven__marquee,
+  .jewellery-gallery .trust-proven__marquee,
+  .team__marquee.trust-proven__marquee {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    overflow: hidden;
+  }
+
+  .trust-proven,
+  .jewellery-gallery,
+  .team {
+    overflow-x: clip;
+  }
+
   .trust-proven__founder-name {
     font-size: clamp(0.92rem, 3.5vw, 1.05rem);
   }

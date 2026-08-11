@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { WhyEmori } from './components/WhyEmori'
 import { Navigation } from './components/Navigation'
 import { Hero } from './components/Hero'
@@ -55,6 +55,7 @@ export default function App() {
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <ApplicationModal />
         <WhatsAppButton />
