@@ -2745,7 +2745,7 @@ body.nav-menu-open .whatsapp-fab {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url('/images/journey-bg.jpg');
+  background-image: url('/images/journey-bg.webp');
   background-size: cover;
   background-position: center 45%;
   background-repeat: no-repeat;

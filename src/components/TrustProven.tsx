@@ -2,8 +2,8 @@ import { Handshake } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { luxuryEase, reveal } from '../lib/motion'
-import arushiJain from '../assets/Arushi Jain.png'
-import sharkPhoto from '../assets/Shark.png'
+import arushiJain from '../assets/Arushi Jain.webp'
+import sharkPhoto from '../assets/Shark.webp'
 import { Team } from './Team'
 
 const dealInvestors = [

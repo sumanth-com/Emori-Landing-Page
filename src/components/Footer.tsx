@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { type MouseEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import elogo from '../assets/Elogo.png'
+import elogo from '../assets/Elogo.webp'
 import { luxuryEase } from '../lib/motion'
 import { scrollToSection } from '../lib/scrollToSection'
 

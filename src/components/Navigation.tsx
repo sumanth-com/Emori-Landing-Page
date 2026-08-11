@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState, type MouseEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import elogo from '../assets/Elogo.png'
+import elogo from '../assets/Elogo.webp'
 import { scrollToSection, sectionPath } from '../lib/scrollToSection'
 
 const links = [

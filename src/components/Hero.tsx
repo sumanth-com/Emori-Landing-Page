@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef, type MouseEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import banner from '../assets/Banner.png'
-import mobileHero from '../assets/MobileHero.png'
+import banner from '../assets/Banner.webp'
+import mobileHero from '../assets/MobileHero.webp'
 import { reveal, staggerSlow } from '../lib/motion'
 import { scrollToSection, sectionPath } from '../lib/scrollToSection'
 

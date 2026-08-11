@@ -1,22 +1,22 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
-import noidaBack from '../assets/NOIDA - Back facade.jpeg'
-import noida1 from '../assets/NOIDA 1.jpeg'
-import noidaFrontFacade from '../assets/NOIDA Front Facade.jpeg'
-import noida2 from '../assets/Noida 2.jpeg'
-import noida3 from '../assets/Noida 3.jpeg'
-import noida4 from '../assets/Noida 4.jpeg'
-import noida5 from '../assets/Noida 5.jpeg'
-import noidaFront from '../assets/Noida front.jpeg'
+import noidaBack from '../assets/NOIDA - Back facade.webp'
+import noida1 from '../assets/NOIDA 1.webp'
+import noidaFrontFacade from '../assets/NOIDA Front Facade.webp'
+import noida2 from '../assets/Noida 2.webp'
+import noida3 from '../assets/Noida 3.webp'
+import noida4 from '../assets/Noida 4.webp'
+import noida5 from '../assets/Noida 5.webp'
+import noidaFront from '../assets/Noida front.webp'
 import { luxuryEase, reveal } from '../lib/motion'
 import { scrollToSection } from '../lib/scrollToSection'
 
-const dwarkaModules = import.meta.glob<string>('../assets/dwarka (*).jpeg', {
+const dwarkaModules = import.meta.glob<string>('../assets/dwarka (*).webp', {
   eager: true,
   import: 'default',
 })
 
-const ggnModules = import.meta.glob<string>('../assets/GGN*.jpeg', {
+const ggnModules = import.meta.glob<string>('../assets/GGN*.webp', {
   eager: true,
   import: 'default',
 })

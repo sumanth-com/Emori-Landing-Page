@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import heroVisual from '../../assets/Hero (2).png'
+import heroVisual from '../../assets/Hero (2).webp'
 import { useMouseParallax } from '../../hooks/useMouseParallax'
 
 const luxuryEase = [0.22, 1, 0.36, 1] as const

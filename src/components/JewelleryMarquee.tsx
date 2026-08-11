@@ -1,12 +1,12 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { luxuryEase, reveal } from '../lib/motion'
-import womenRings from '../assets/Women Rings.jpg'
-import earrings from '../assets/Earrings.jfif'
-import mensRings from "../assets/Men's Rings.jfif"
-import mangalsutras from '../assets/Mangalsutras.jfif'
-import pendants from '../assets/Pendants.jfif'
-import bracelets from '../assets/Bracelets.jfif'
-import necklaces from '../assets/Necklaces.jfif'
+import womenRings from '../assets/Women Rings.webp'
+import earrings from '../assets/Earrings.webp'
+import mensRings from "../assets/Men's Rings.webp"
+import mangalsutras from '../assets/Mangalsutras.webp'
+import pendants from '../assets/Pendants.webp'
+import bracelets from '../assets/Bracelets.webp'
+import necklaces from '../assets/Necklaces.webp'
 
 const gallery = [
   {

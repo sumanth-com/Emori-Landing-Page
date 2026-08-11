@@ -380,7 +380,7 @@ function tryBuildLogoAttachment(siteUrl) {
     return null
   }
 
-  var logoUrl = siteUrl + '/brand/emori-logo.png'
+  var logoUrl = siteUrl + '/brand/emori-logo.webp'
 
   try {
     var response = UrlFetchApp.fetch(logoUrl, { muteHttpExceptions: true })
@@ -390,7 +390,7 @@ function tryBuildLogoAttachment(siteUrl) {
     }
 
     return {
-      filename: 'emori-logo.png',
+      filename: 'emori-logo.webp',
       content: Utilities.base64Encode(response.getBlob().getBytes()),
       content_id: 'emori-logo',
     }
