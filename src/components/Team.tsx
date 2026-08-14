@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import avniJamwal from '../assets/Avni Jamwal.webp'
-import komalGarg from '../assets/Komal Garg.webp'
+import komalGarg from '../assets/Komal Garg.jpeg'
 import manishKumar from '../assets/Manish Kumar.webp'
 import sagarMehra from '../assets/Sagar Mehra.webp'
 import santoshKumar from '../assets/Santosh Kumar.webp'
