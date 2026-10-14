@@ -5,16 +5,16 @@
  * 1. Create a new Google Sheet.
  * 2. Extensions → Apps Script → paste this file → Save.
  * 3. Run `setupSheet` once (authorize when prompted) — creates **Leads** tab.
- * 4. Run `setupConfigSheet` once — creates **Config** tab for Resend keys.
- * 5. Paste your Resend API key into Config → RESEND_API_KEY (no redeploy needed later).
- * 6. Run `testLeadEmail` once to verify email delivery.
- * 7. Deploy → Manage deployments → Edit → New version → Deploy (same URL).
+ * 4. Project Settings (gear icon) → Script Properties → Add script property:
+ *      RESEND_API_KEY = re_…
+ *    Optional overrides: RESEND_FROM_EMAIL, LEAD_NOTIFICATION_EMAIL, SITE_URL.
+ * 5. Run `testLeadEmail` once to verify email delivery.
+ * 6. Deploy → Manage deployments → Edit → New version → Deploy (same URL).
  *
- * Resend keys live in the **Config** sheet or Script Properties — not in the website .env.
+ * Secrets live only in Script Properties — never in this file, the sheet, or the website .env.
  */
 
 var SHEET_NAME = 'Leads'
-var CONFIG_SHEET_NAME = 'Config'
 var TIMEZONE = 'Asia/Kolkata'
 
 var HEADERS = [
@@ -33,9 +33,8 @@ var HEADERS = [
   'Email Status',
 ]
 
-/** Optional fallback if Config sheet is empty. Prefer the Config tab instead. */
-var EMAIL_SETUP = {
-  RESEND_API_KEY: '',
+/** Non-secret defaults, overridable via Script Properties. */
+var EMAIL_DEFAULTS = {
   RESEND_FROM_EMAIL: 'EMORI Franchise <contact@ifranchise.in>',
   LEAD_NOTIFICATION_EMAIL: 'contact@ifranchise.in',
   SITE_URL: '',
@@ -80,72 +79,14 @@ function ensureLeadHeaders(sheet) {
   })
 }
 
-function setupConfigSheet() {
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
-  var sheet = spreadsheet.getSheetByName(CONFIG_SHEET_NAME)
-  if (!sheet) {
-    sheet = spreadsheet.insertSheet(CONFIG_SHEET_NAME)
-  }
-
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Key', 'Value'])
-    sheet.appendRow(['RESEND_API_KEY', ''])
-    sheet.appendRow(['RESEND_FROM_EMAIL', 'EMORI Franchise <contact@ifranchise.in>'])
-    sheet.appendRow(['LEAD_NOTIFICATION_EMAIL', 'contact@ifranchise.in'])
-    sheet.appendRow(['SITE_URL', ''])
-    sheet.getRange(1, 1, 1, 2).setFontWeight('bold')
-    sheet.setColumnWidth(1, 240)
-    sheet.setColumnWidth(2, 420)
-  }
-}
-
-function readConfigSheet() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG_SHEET_NAME)
-  if (!sheet || sheet.getLastRow() < 2) {
-    return {}
-  }
-
-  var values = sheet.getRange(2, 1, sheet.getLastRow(), 2).getValues()
-  var config = {}
-
-  values.forEach(function (row) {
-    var key = String(row[0] || '').trim()
-    var value = String(row[1] || '').trim()
-    if (!key) return
-
-    if (key === 'RESEND_API_KEY') config.apiKey = value
-    if (key === 'RESEND_FROM_EMAIL') config.from = value
-    if (key === 'LEAD_NOTIFICATION_EMAIL') config.to = value
-    if (key === 'SITE_URL') config.siteUrl = value
-  })
-
-  return config
-}
-
 function getEmailSettings() {
   var props = PropertiesService.getScriptProperties()
-  var sheetConfig = readConfigSheet()
 
   return {
-    apiKey: String(
-      props.getProperty('RESEND_API_KEY') ||
-        sheetConfig.apiKey ||
-        EMAIL_SETUP.RESEND_API_KEY ||
-        ''
-    ).trim(),
-    from: String(
-      props.getProperty('RESEND_FROM_EMAIL') ||
-        sheetConfig.from ||
-        EMAIL_SETUP.RESEND_FROM_EMAIL ||
-        'EMORI Franchise <contact@ifranchise.in>'
-    ).trim(),
-    to: String(
-      props.getProperty('LEAD_NOTIFICATION_EMAIL') ||
-        sheetConfig.to ||
-        EMAIL_SETUP.LEAD_NOTIFICATION_EMAIL ||
-        'contact@ifranchise.in'
-    ).trim(),
-    siteUrl: String(props.getProperty('SITE_URL') || sheetConfig.siteUrl || EMAIL_SETUP.SITE_URL || '')
+    apiKey: String(props.getProperty('RESEND_API_KEY') || '').trim(),
+    from: String(props.getProperty('RESEND_FROM_EMAIL') || EMAIL_DEFAULTS.RESEND_FROM_EMAIL).trim(),
+    to: String(props.getProperty('LEAD_NOTIFICATION_EMAIL') || EMAIL_DEFAULTS.LEAD_NOTIFICATION_EMAIL).trim(),
+    siteUrl: String(props.getProperty('SITE_URL') || EMAIL_DEFAULTS.SITE_URL || '')
       .trim()
       .replace(/\/$/, ''),
   }
@@ -154,42 +95,53 @@ function getEmailSettings() {
 function getEmailConfigReport() {
   var settings = getEmailSettings()
 
+  var configError = validateEmailSettings(settings)
+
+  // Served publicly via doGet(?check=email) — never include any part of the API key.
   return {
-    configured: Boolean(settings.apiKey),
+    configured: !configError,
+    configError: configError || null,
     from: settings.from,
     to: settings.to,
     siteUrl: settings.siteUrl || null,
     apiKeyPresent: Boolean(settings.apiKey),
-    apiKeyPreview: settings.apiKey ? settings.apiKey.slice(0, 8) + '…' : null,
-    configSheetFound: Boolean(SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG_SHEET_NAME)),
   }
 }
 
-/**
- * Run once after filling EMAIL_SETUP, or use the Config sheet instead.
- */
-function setupEmailConfig() {
-  setupConfigSheet()
+var EMAIL_PATTERN = /^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/
 
-  var props = PropertiesService.getScriptProperties()
-  var next = {}
+/** Accepts `name@domain.tld` or `Display Name <name@domain.tld>`. */
+function isValidSender(value) {
+  var match = String(value).match(/^[^<>]*<([^<>]+)>$/)
+  return EMAIL_PATTERN.test(match ? match[1].trim() : String(value).trim())
+}
 
-  if (EMAIL_SETUP.RESEND_API_KEY) next.RESEND_API_KEY = String(EMAIL_SETUP.RESEND_API_KEY).trim()
-  if (EMAIL_SETUP.RESEND_FROM_EMAIL) next.RESEND_FROM_EMAIL = String(EMAIL_SETUP.RESEND_FROM_EMAIL).trim()
-  if (EMAIL_SETUP.LEAD_NOTIFICATION_EMAIL) {
-    next.LEAD_NOTIFICATION_EMAIL = String(EMAIL_SETUP.LEAD_NOTIFICATION_EMAIL).trim()
+function parseRecipients(value) {
+  return String(value)
+    .split(',')
+    .map(function (item) {
+      return item.trim()
+    })
+    .filter(Boolean)
+}
+
+/** Returns an error message, or '' when settings are usable. */
+function validateEmailSettings(settings) {
+  if (!settings.apiKey) return 'RESEND_API_KEY is not set'
+  if (!/^re_\S+$/.test(settings.apiKey)) return 'RESEND_API_KEY does not look like a Resend key (re_…)'
+  if (!isValidSender(settings.from)) return 'RESEND_FROM_EMAIL is not a valid sender address'
+  var recipients = parseRecipients(settings.to)
+  if (!recipients.length || !recipients.every(function (r) { return EMAIL_PATTERN.test(r) })) {
+    return 'LEAD_NOTIFICATION_EMAIL is not a valid email address'
   }
-  if (EMAIL_SETUP.SITE_URL) next.SITE_URL = String(EMAIL_SETUP.SITE_URL).replace(/\/$/, '')
-
-  if (Object.keys(next).length) {
-    props.setProperties(next)
-  }
-
-  Logger.log('Email config report: ' + JSON.stringify(getEmailConfigReport()))
+  return ''
 }
 
 /** Run from Apps Script editor to verify Resend is working. */
 function testLeadEmail() {
+  Logger.log('Spreadsheet: ' + SpreadsheetApp.getActiveSpreadsheet().getName())
+  Logger.log('Email config: ' + JSON.stringify(getEmailConfigReport()))
+
   var result = sendLeadNotificationEmail({
     submittedAt: formatLeadDateTime(new Date()),
     fullName: 'Test Lead',
@@ -234,11 +186,24 @@ function doGet(e) {
 
 function doPost(e) {
   try {
+    var submissionId = String(((e && e.parameter) || {}).submission_id || '').trim()
+    var cache = CacheService.getScriptCache()
+    var cacheKey = submissionId ? 'submission:' + submissionId.slice(0, 200) : ''
+    if (cacheKey && cache.get(cacheKey)) {
+      return jsonResponse({ success: true, message: 'Application already received', duplicate: true })
+    }
+
     var sheet = getLeadsSheet()
     setupSheet()
 
     var data = readPayload(e)
-    var emailResult = sendLeadNotificationEmail(data)
+    var emailResult
+    try {
+      emailResult = sendLeadNotificationEmail(data)
+    } catch (emailError) {
+      // Never lose the lead because the notification email failed.
+      emailResult = { ok: false, message: 'Failed: ' + String(emailError) }
+    }
 
     sheet.appendRow([
       data.submittedAt,
@@ -255,6 +220,8 @@ function doPost(e) {
       data.utmParameters,
       emailResult.ok ? 'Sent' : emailResult.skipped ? '' : emailResult.message,
     ])
+
+    if (cacheKey) cache.put(cacheKey, '1', 21600)
 
     var redirectUrl = getSafeRedirectUrl(e)
     if (redirectUrl) {
@@ -300,15 +267,22 @@ function sendLeadNotificationEmail(data) {
   if (!settings.apiKey) {
     return {
       ok: false,
-      message: '',
+      message:
+        'RESEND_API_KEY is not set. Add it in Apps Script → Project Settings → Script Properties.',
       skipped: true,
     }
   }
 
+  var configError = validateEmailSettings(settings)
+  if (configError) {
+    Logger.log('Lead email not sent: ' + configError)
+    return { ok: false, message: 'Config error: ' + configError }
+  }
+
   var payload = {
     from: settings.from,
-    to: [settings.to],
-    reply_to: data.email || settings.to,
+    to: parseRecipients(settings.to),
+    reply_to: EMAIL_PATTERN.test(data.email) ? data.email : parseRecipients(settings.to)[0],
     subject: 'New EMORI Franchise Lead — ' + (data.fullName || 'Unknown'),
     html: buildLeadEmailHtml(data, false),
   }

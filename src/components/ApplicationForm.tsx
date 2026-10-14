@@ -16,7 +16,12 @@ import {
   INDIAN_STATES,
 } from '../data/indiaLocations'
 import { fieldReveal } from '../lib/formMotion'
-import { getGoogleScriptUrl, submitApplication } from '../lib/formSubmit'
+import {
+  createSubmissionId,
+  getGoogleScriptUrl,
+  SubmissionError,
+  submitApplication,
+} from '../lib/formSubmit'
 import { PhoneField, usePhoneFieldState } from './PhoneField'
 import { useNavigate } from 'react-router-dom'
 
@@ -66,6 +71,8 @@ export function ApplicationForm({
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const submittingRef = useRef(false)
+  const submissionIdRef = useRef<string | null>(null)
   const phoneField = usePhoneFieldState()
   const isInline = variant === 'inline'
 
@@ -76,6 +83,7 @@ export function ApplicationForm({
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (submittingRef.current) return
     setSubmitError(null)
 
     if (!scriptUrl) {
@@ -104,13 +112,23 @@ export function ApplicationForm({
       return
     }
 
+    submittingRef.current = true
     setSubmitting(true)
+    submissionIdRef.current ??= createSubmissionId()
 
     try {
-      await submitApplication(form)
+      await submitApplication(form, submissionIdRef.current)
       navigate('/thank-you')
-    } catch {
-      setSubmitError('Unable to submit right now. Please try again.')
+    } catch (error) {
+      const kind = error instanceof SubmissionError ? error.kind : 'network'
+      setSubmitError(
+        kind === 'timeout'
+          ? 'This is taking longer than expected. Please check your connection and try again.'
+          : kind === 'server'
+            ? 'We couldn’t save your application. Please try again in a moment.'
+            : 'Unable to submit right now. Please check your connection and try again.',
+      )
+      submittingRef.current = false
       setSubmitting(false)
     }
   }
